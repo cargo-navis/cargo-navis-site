@@ -1,0 +1,20 @@
+---
+import Button from './Button.astro';
+import { cta } from '../data/home';
+---
+
+<section id="Cta" class="pb-[100px] max-lg:pb-20 max-md:pb-[60px]">
+  <div class="mx-auto w-full max-w-[1140px] px-4 max-lg:px-6">
+    <div class="rounded-[20px] bg-[linear-gradient(290deg,#0e6a75,#ffffff)] p-[100px_80px] max-lg:rounded-2xl max-lg:p-[80px_50px] max-md:rounded-xl max-md:bg-none max-md:p-[50px_30px] max-[479px]:rounded-lg max-[479px]:p-[40px_15px]">
+      <div class="max-w-[476px] min-[1440px]:max-w-[600px]">
+        <h2 data-reveal class="mb-6 text-[clamp(2rem,1.5455rem+1.9394vw,3rem)] font-bold leading-[1.2]">
+          {cta.heading}
+        </h2>
+        <p data-reveal class="mb-8" style="--reveal-delay:80ms">{cta.paragraph}</p>
+        <div data-reveal style="--reveal-delay:160ms">
+          <Button label={cta.button.label} href={cta.button.href} />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

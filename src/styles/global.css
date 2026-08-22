@@ -1,1 +1,113 @@
 @import "tailwindcss";
+
+/* DM Sans — self-hosted (rescued from Webflow CDN, TTF -> WOFF2) */
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/dmsans-regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/dmsans-medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/dmsans-semibold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/dmsans-bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/dmsans-black.woff2") format("woff2");
+}
+
+/* Design tokens (mapped from Webflow variables) */
+@theme {
+  --font-sans: "DM Sans", Arial, sans-serif;
+
+  --color-brand: #0e6a75;
+  --color-brand-secondary: #1e1e1e;
+  --color-brand-tertiary: #eb1362;
+  --color-brand-alt: #1e4aa2;
+  --color-success: #45dc84;
+  --color-error: #eb1362;
+  --color-surface: #f7f7f7;
+
+  --container-site: 940px;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-brand-secondary);
+  font-size: 18px;
+  line-height: 1.44;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scroll reveal — reimplements Webflow scroll interactions.
+   Elements marked [data-reveal] start hidden/offset and reveal when the
+   IntersectionObserver in Layout.astro adds .is-revealed.
+   --reveal-delay staggers siblings; motion-reduce users see no offset. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+/* Scale-fade variants (hero images, dashboard shot) */
+[data-reveal="scale-80"] {
+  transform: scale(0.8);
+}
+[data-reveal="scale-70"] {
+  transform: scale(0.7);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Logo marquee — continuous horizontal scroll (two identical rows) */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}

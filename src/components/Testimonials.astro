@@ -1,0 +1,41 @@
+---
+import { Image } from 'astro:assets';
+import { testimonials } from '../data/home';
+---
+
+<section id="Review" class="relative z-[3] pb-[100px] max-lg:pb-20 max-md:pb-[60px]">
+  <!-- decorative blobs -->
+  <div class="pointer-events-none absolute bottom-[223px] left-[63px] -z-10 h-[576px] w-[584px] rounded-full bg-brand/15 blur-[250px] max-md:w-full"></div>
+  <div class="pointer-events-none absolute bottom-[223px] right-[63px] -z-10 h-[537px] w-[558px] rounded-full bg-brand/70 blur-[250px]"></div>
+
+  <div class="mx-auto w-full max-w-[1140px] px-4 max-lg:px-6">
+    <div class="mx-auto mb-[50px] max-w-[538px] text-center min-[1280px]:mb-[60px] max-[479px]:text-left">
+      <h2 data-reveal class="text-[clamp(2rem,1.5455rem+1.9394vw,3rem)] font-bold leading-[1.2]">
+        {testimonials.heading}
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-2 gap-x-6 gap-y-8 max-md:grid-cols-1 max-md:gap-6">
+      {
+        testimonials.cards.map((c, i) => (
+          <div
+            data-reveal
+            style={`--reveal-delay:${i * 80}ms`}
+            class={`rounded-2xl bg-white p-8 max-lg:px-[26px] max-lg:py-3 max-md:p-[22px] ${c.wide ? 'col-span-2 max-md:col-span-1' : ''}`}
+          >
+            <div class="mb-6 flex items-center justify-between gap-2.5 max-md:flex-col max-md:items-start">
+              <div>
+                <div class="mb-0.5 font-bold">{c.name}</div>
+                <div class="text-sm font-medium">{c.role}</div>
+              </div>
+              <Image src={c.logo.src} alt={c.logo.alt} class="h-auto max-h-12 w-auto object-contain" />
+            </div>
+            <p class="text-xl font-semibold leading-[1.4] max-lg:text-lg max-[479px]:text-base">
+              {c.quote}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

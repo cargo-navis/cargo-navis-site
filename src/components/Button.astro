@@ -1,0 +1,21 @@
+---
+interface Props {
+  label: string;
+  href: string;
+  variant?: 'base' | 'black';
+  target?: string;
+  class?: string;
+}
+const { label, href, variant = 'base', target, class: klass = '' } = Astro.props;
+const base =
+  'inline-flex items-center justify-center rounded-lg px-7 py-3.5 font-bold leading-[1.33] text-white transition-colors duration-300 max-md:rounded-md max-sm:rounded';
+const variants = {
+  base: 'bg-brand hover:bg-brand-secondary',
+  black: 'bg-brand-secondary hover:bg-brand',
+};
+const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
+---
+
+<a href={href} target={target} rel={rel} class={`${base} ${variants[variant]} ${klass}`}>
+  <span>{label}</span>
+</a>

@@ -1,0 +1,24 @@
+---
+import { Image } from 'astro:assets';
+import { marqueeLogos } from '../data/home';
+// Duplicate the set so the -50% keyframe loops seamlessly.
+const loop = [...marqueeLogos, ...marqueeLogos];
+---
+
+<section class="pb-[100px] max-lg:pb-20 max-md:pb-[60px]">
+  <div class="mx-auto w-full max-w-[1140px] px-4 max-lg:px-6">
+    <div data-reveal class="overflow-hidden">
+      <div class="marquee-track gap-[75px] max-lg:gap-[50px] max-md:gap-[35px] max-[479px]:gap-[25px]">
+        {
+          loop.map((logo) => (
+            <Image
+              src={logo.src}
+              alt={logo.alt}
+              class="w-40 flex-none object-contain max-[479px]:w-[100px]"
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

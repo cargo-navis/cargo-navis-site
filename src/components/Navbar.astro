@@ -1,0 +1,80 @@
+---
+import { Image } from 'astro:assets';
+import Button from './Button.astro';
+import { navLinks, loginHref, logomark } from '../data/home';
+---
+
+<header class="absolute inset-x-0 top-8 z-20 w-full px-4 max-[479px]:top-5">
+  <div class="mx-auto max-w-[1164px] rounded-lg bg-white/50 p-3 backdrop-blur-md max-lg:py-1.5 max-md:p-2.5 max-[479px]:p-[7px]">
+    <div class="flex items-center justify-between">
+      <a href="/" aria-current="page" class="flex items-center">
+        <Image src={logomark} alt="Logo" class="w-[42px] min-[1280px]:w-[60px]" />
+      </a>
+
+      <nav class="flex items-center gap-10 max-lg:hidden" aria-label="Glavna navigacija">
+        {
+          navLinks.map((l) => (
+            <a
+              href={l.href}
+              class="font-medium leading-[1.33] transition-colors duration-300 hover:text-brand"
+            >
+              {l.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="max-md:hidden">
+          <Button label="Prijava" href={loginHref} variant="black" target="_blank" />
+        </div>
+        <button
+          type="button"
+          id="menu-toggle"
+          aria-label="Otvori izbornik"
+          aria-expanded="false"
+          class="hidden h-[50px] w-[50px] flex-col items-center justify-center gap-[5px] rounded-lg bg-brand-secondary max-lg:flex"
+        >
+          <span class="block h-0.5 w-[70%] bg-white transition"></span>
+          <span class="block h-0.5 w-[60%] bg-white transition"></span>
+          <span class="block h-0.5 w-[70%] bg-white transition"></span>
+        </button>
+      </div>
+    </div>
+
+    <nav
+      id="mobile-menu"
+      class="mt-4 hidden rounded-lg bg-white px-6 py-5 text-center shadow-[0_2px_5px_#ebedef]"
+      aria-label="Mobilna navigacija"
+    >
+      {
+        navLinks.map((l) => (
+          <a href={l.href} class="block py-2.5 font-medium transition-colors hover:text-brand">
+            {l.label}
+          </a>
+        ))
+      }
+      <a href={loginHref} target="_blank" rel="noopener noreferrer" class="mt-2 block py-2.5 font-bold text-brand">
+        Prijava
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden') === false;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.classList.toggle('!bg-brand', open);
+  });
+  // Close after tapping a link.
+  menu?.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => {
+      menu.classList.add('hidden');
+      toggle?.setAttribute('aria-expanded', 'false');
+      toggle?.classList.remove('!bg-brand');
+    }),
+  );
+</script>

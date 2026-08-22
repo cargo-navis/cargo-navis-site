@@ -1,0 +1,70 @@
+---
+interface Props {
+  videoId: string;
+}
+const { videoId } = Astro.props;
+---
+
+<div
+  id="video-modal"
+  data-video-id={videoId}
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Video"
+>
+  <div class="relative w-full max-w-[940px]">
+    <button
+      type="button"
+      id="video-close"
+      aria-label="Zatvori video"
+      class="absolute -top-10 right-0 text-2xl font-bold text-white"
+    >
+      ✕
+    </button>
+    <div class="relative aspect-video overflow-hidden rounded-xl bg-black">
+      <iframe
+        id="video-frame"
+        class="absolute inset-0 h-full w-full"
+        title="Cargo Navis video"
+        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('video-modal');
+  const frame = document.getElementById('video-frame') as HTMLIFrameElement | null;
+  const closeBtn = document.getElementById('video-close');
+  const id = modal?.dataset.videoId;
+
+  function open() {
+    if (!modal || !frame || !id) return;
+    frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    if (!modal || !frame) return;
+    frame.src = '';
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-video-play]').forEach((el) =>
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      open();
+    }),
+  );
+  closeBtn?.addEventListener('click', close);
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal?.classList.contains('hidden')) close();
+  });
+</script>

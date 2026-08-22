@@ -1,0 +1,97 @@
+---
+import { Image } from 'astro:assets';
+import VideoModal from './VideoModal.astro';
+import { about } from '../data/home';
+
+// Split each stat value into numeric target + suffix for the count-up.
+const stats = about.stats.map((s) => {
+  const m = s.value.match(/^(\d+)(.*)$/);
+  return { ...s, num: m ? Number(m[1]) : 0, suffix: m ? m[2] : '' };
+});
+---
+
+<section id="About" class="pb-[100px] max-lg:pb-20 max-md:pb-[60px]">
+  <div class="mx-auto w-full max-w-[1140px] px-4 max-lg:px-6">
+    <!-- heading -->
+    <div class="mx-auto mb-12 max-w-[713px] text-center max-[479px]:text-left">
+      <h2 data-reveal class="mb-6 text-[clamp(2rem,1.5455rem+1.9394vw,3rem)] font-bold leading-[1.2]">
+        {about.heading}
+      </h2>
+      <p data-reveal style="--reveal-delay:80ms">{about.paragraph}</p>
+    </div>
+
+    <!-- dashboard + play -->
+    <div
+      data-reveal="scale-70"
+      class="relative mb-12 overflow-hidden rounded-3xl max-lg:rounded-2xl max-md:rounded-xl max-[479px]:rounded-lg"
+    >
+      <Image src={about.dashboard.src} alt={about.dashboard.alt} class="w-full" />
+      <div class="absolute inset-0 bg-[#1b255942]"></div>
+      <div class="absolute inset-0 z-[2] flex items-center justify-center">
+        <button
+          type="button"
+          data-video-play
+          aria-label="Pokreni video"
+          class="flex h-[100px] w-[100px] items-center justify-center rounded-full bg-white text-brand shadow-[10px_15px_44px_#0e6a755e] max-lg:h-20 max-lg:w-20 max-[479px]:h-[60px] max-[479px]:w-[60px]"
+        >
+          <svg width="26" height="20" viewBox="0 0 15 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0L15 12L0 24V0Z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- counters -->
+    <div class="flex justify-between gap-[30px] max-md:flex-wrap max-md:gap-x-[50px] max-md:gap-y-[30px]">
+      {
+        stats.map((s, i) => (
+          <div
+            data-reveal
+            class="flex flex-1 flex-col items-center gap-4 max-md:basis-[40%] max-[479px]:basis-[28%]"
+            style={`--reveal-delay:${i * 80}ms`}
+          >
+            <span
+              class="count-text text-[60px] font-bold leading-[0.96] text-brand max-lg:text-[42px] max-[479px]:text-4xl"
+              data-count={s.num}
+              data-suffix={s.suffix}
+            >
+              {s.value}
+            </span>
+            <span class="w-full text-center min-[1280px]:text-xl max-lg:text-base max-[479px]:text-sm">
+              {s.label}
+            </span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<VideoModal videoId={about.videoId} />
+
+<script>
+  // Count-up when a counter scrolls into view.
+  const counters = document.querySelectorAll<HTMLElement>('.count-text[data-count]');
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        const el = e.target as HTMLElement;
+        const target = Number(el.dataset.count || 0);
+        const suffix = el.dataset.suffix || '';
+        const duration = 1200;
+        let start: number | null = null;
+        const step = (ts: number) => {
+          if (start === null) start = ts;
+          const p = Math.min((ts - start) / duration, 1);
+          el.textContent = Math.floor(p * target) + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+        io.unobserve(el);
+      }
+    },
+    { threshold: 0.5 },
+  );
+  counters.forEach((c) => io.observe(c));
+</script>

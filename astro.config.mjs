@@ -8,6 +8,8 @@ import mdx from '@astrojs/mdx';
 
 import vercel from '@astrojs/vercel';
 
+import sitemap from '@astrojs/sitemap';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.cargo-navis.com',
@@ -27,6 +29,15 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [react(), mdx()],
+  integrations: [
+    react(),
+    mdx(),
+    sitemap({
+      i18n: {
+        defaultLocale: 'hr',
+        locales: { hr: 'hr-HR', en: 'en' },
+      },
+    }),
+  ],
   adapter: vercel()
 });
