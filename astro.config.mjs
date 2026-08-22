@@ -6,6 +6,8 @@ import react from '@astrojs/react';
 
 import mdx from '@astrojs/mdx';
 
+import vercel from '@astrojs/vercel';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.cargo-navis.com',
@@ -25,5 +27,6 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [react(), mdx()]
+  integrations: [react(), mdx()],
+  adapter: vercel()
 });
