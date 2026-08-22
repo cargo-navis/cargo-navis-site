@@ -1,6 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getLocale, useTranslations } from '../i18n/utils';
+import Layout from '../../layouts/Layout.astro';
+import { getLocale, useTranslations } from '../../i18n/utils';
 
 const locale = getLocale(Astro.url);
 const t = useTranslations(locale);
@@ -11,7 +11,7 @@ const t = useTranslations(locale);
     <h1 class="text-4xl font-black text-brand">Cargo Navis</h1>
     <p class="mt-4 text-brand-secondary">
       {/* Placeholder — full 1:1 rebuild lands in Step 5. */}
-      Scaffold layout aktivan. Rebuild sekcija dolazi u Step 5.
+      Scaffold layout active. Section rebuild lands in Step 5.
     </p>
     <a
       href="#"

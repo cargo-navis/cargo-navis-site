@@ -1,1 +1,61 @@
 @import "tailwindcss";
+
+/* DM Sans — self-hosted (rescued from Webflow CDN, TTF -> WOFF2) */
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/dmsans-regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/dmsans-medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/dmsans-semibold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/dmsans-bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/dmsans-black.woff2") format("woff2");
+}
+
+/* Design tokens (mapped from Webflow variables) */
+@theme {
+  --font-sans: "DM Sans", Arial, sans-serif;
+
+  --color-brand: #0e6a75;
+  --color-brand-secondary: #1e1e1e;
+  --color-brand-tertiary: #eb1362;
+  --color-brand-alt: #1e4aa2;
+  --color-success: #45dc84;
+  --color-error: #eb1362;
+  --color-surface: #f7f7f7;
+
+  --container-site: 940px;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-brand-secondary);
+  font-size: 18px;
+  line-height: 1.44;
+  -webkit-font-smoothing: antialiased;
+}
