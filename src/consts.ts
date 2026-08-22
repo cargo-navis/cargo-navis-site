@@ -8,6 +8,11 @@ export const SITE = {
   contactEmail: 'marko.hezler@cargo-navis.com',
 } as const;
 
+// Used by hero, all feature CTAs, footer, and the CTA section.
+// TODO Step 7: swap to the Astro Action contact form.
+export const INQUIRY_MAILTO = `mailto:${SITE.contactEmail}`;
+export const LOGIN_URL = SITE.loginUrl;
+
 // Per-locale page metadata. hr copied 1:1 from current site (SEO parity).
 export const META: Record<Locale, { title: string; description: string }> = {
   hr: {

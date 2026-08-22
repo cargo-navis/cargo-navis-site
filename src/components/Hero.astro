@@ -1,0 +1,44 @@
+---
+import { Image } from 'astro:assets';
+import Button from './Button.astro';
+import { hero, shape } from '../data/home';
+---
+
+<header class="relative z-[6] overflow-clip pb-[100px] pt-[188px] max-lg:pb-20 max-lg:pt-[170px] max-md:pb-[60px] max-md:pt-40 max-[479px]:pt-[140px]">
+  <!-- decorative blur blobs -->
+  <div class="pointer-events-none absolute right-[87px] top-[13px] -z-10 h-[537px] w-[558px] rounded-full bg-brand blur-[250px]"></div>
+  <div class="pointer-events-none absolute left-10 top-0 -z-10 h-[537px] w-[558px] rounded-full bg-brand/15 blur-[250px]"></div>
+
+  <div class="mx-auto w-full max-w-[1170px] px-4">
+    <div class="grid grid-cols-[1.1fr_1fr] items-center gap-[60px] min-[1280px]:gap-[90px] min-[1440px]:grid-cols-2 min-[1440px]:gap-9 max-lg:grid-cols-1 max-lg:gap-10">
+      <div class="max-lg:text-center">
+        <h1
+          data-reveal
+          class="mb-6 text-[clamp(2.625rem,2rem+2.6667vw,4rem)] font-bold leading-[1.18]"
+        >
+          {hero.heading}
+        </h1>
+        <p data-reveal class="mb-8" style="--reveal-delay:80ms">{hero.subtitle}</p>
+        <div data-reveal class="flex max-lg:justify-center" style="--reveal-delay:160ms">
+          <Button label={hero.cta.label} href={hero.cta.href} />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-[1fr_1.25fr] gap-5 min-[1440px]:grid-cols-[1.25fr_1.25fr] max-lg:flex max-lg:justify-center max-[479px]:flex-wrap">
+        <div data-reveal="scale-80" class="grid grid-flow-row gap-4">
+          <Image src={hero.images.two[0].src} alt={hero.images.two[0].alt} class="rounded-[13px]" />
+          <Image src={hero.images.two[1].src} alt={hero.images.two[1].alt} class="rounded-[13px]" />
+        </div>
+        <div data-reveal="scale-80" class="grid grid-flow-row gap-5" style="--reveal-delay:120ms">
+          <Image src={hero.images.three.src} alt={hero.images.three.alt} class="rounded-xl" />
+          <Image src={hero.images.four.src} alt={hero.images.four.alt} class="rounded-2xl" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- decorative graph shape -->
+  <div class="pointer-events-none absolute right-0 top-[110px] -z-10 flex max-w-[430px] justify-end min-[1280px]:max-w-[545px] min-[1440px]:max-w-[666px]">
+    <Image src={shape} alt="Shape Image" />
+  </div>
+</header>

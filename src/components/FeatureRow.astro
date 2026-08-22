@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import Button from './Button.astro';
+import CheckIcon from './CheckIcon.astro';
+import { INQUIRY, type FeatureRow } from '../data/home';
+
+interface Props {
+  row: FeatureRow;
+}
+const { row } = Astro.props;
+---
+
+<div class="grid grid-cols-2 items-center gap-[90px] min-[1280px]:gap-[113px] max-lg:gap-[30px] max-md:grid-cols-1 max-[479px]:gap-[50px]">
+  <!-- image -->
+  <div class={`max-md:order-1 ${row.reverse ? 'order-1' : 'order-2'}`}>
+    <Image src={row.image.src} alt={row.image.alt} class="w-full rounded-3xl max-lg:rounded-2xl max-md:rounded-xl" />
+  </div>
+
+  <!-- text -->
+  <div class={`max-md:order-2 ${row.reverse ? 'order-2' : 'order-1'}`}>
+    <h2
+      data-reveal
+      class="mb-6 text-[clamp(2rem,1.5455rem+1.9394vw,3rem)] font-bold leading-[1.2] max-lg:max-w-[700px]"
+      set:html={row.title}
+    />
+    {row.paragraphs.map((p, i) => (
+      <p data-reveal class="mb-6 last:mb-0" style={`--reveal-delay:${(i + 1) * 60}ms`} set:html={p} />
+    ))}
+
+    {
+      row.subBoxes && (
+        <div data-reveal class="mt-2 grid grid-cols-[1fr_1.25fr] gap-10 max-[479px]:grid-cols-1">
+          {row.subBoxes.map((b) => (
+            <div class="flex flex-col gap-4">
+              <h3 class="text-[clamp(1.25rem,1.1364rem+.4848vw,1.5rem)] font-semibold leading-[1.16]">
+                {b.title}
+              </h3>
+              <p class="text-base leading-[1.5]">{b.text}</p>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      row.bullets && (
+        <div class="mt-2 flex flex-col gap-5">
+          {row.bullets.map((b, i) => (
+            <div data-reveal class="flex max-w-[441px] items-start gap-3" style={`--reveal-delay:${i * 60}ms`}>
+              <CheckIcon />
+              <span class="text-base leading-[1.5]" set:html={b} />
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    <div data-reveal class="mt-8">
+      <Button label="Pošaljite upit" href={INQUIRY} />
+    </div>
+  </div>
+</div>

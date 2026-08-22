@@ -1,0 +1,12 @@
+---
+import FeatureRow from './FeatureRow.astro';
+import { features } from '../data/home';
+---
+
+<section id="Feature" class="pb-[100px] max-lg:pb-20 max-md:pb-[60px]">
+  <div class="mx-auto w-full max-w-[1140px] px-4 max-lg:px-6">
+    <div class="flex flex-col gap-[100px] min-[1280px]:gap-[120px] max-lg:gap-[70px] max-md:gap-[50px] max-[479px]:gap-10">
+      {features.map((row) => <FeatureRow row={row} />)}
+    </div>
+  </div>
+</section>
