@@ -34,7 +34,7 @@ Font Awesome: fa-regular-400, fa-solid-900, fa-brands-400 (.woff2)
 | cleanshot-2026-02-11-at-10.23.14.webp | Hero Image | **map in Step 5** |
 
 ## Favicons — `public/`
-favicon-32x32.png, android-chrome-512x512.png (plus scaffold favicon.svg/.ico)
+favicon-32x32.png, android-chrome-512x512.png
 
 ## TODO Step 5
 - Map the 5 dated `cleanshot-*` files to their DOM section, rename semantically.
