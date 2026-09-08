@@ -1,0 +1,52 @@
+---
+import Button from './Button.astro';
+import BookingEmbed from './BookingEmbed.astro';
+import CheckIcon from './CheckIcon.astro';
+import { demo } from '../data/demo';
+import { INQUIRY_MAILTO } from '../consts';
+import { getLocale } from '../i18n/utils';
+
+const locale = getLocale(Astro.url);
+const copy = demo[locale];
+---
+
+<section class="relative z-[6] overflow-clip pb-[100px] pt-[188px] max-lg:pb-20 max-lg:pt-[170px] max-md:pb-[60px] max-md:pt-40 max-[479px]:pt-[140px]">
+  <!-- decorative blur blobs, matching the homepage hero -->
+  <div class="pointer-events-none absolute right-[18%] top-[13px] -z-10 h-[537px] w-[558px] rounded-full bg-brand/40 blur-[250px]"></div>
+  <div class="pointer-events-none absolute left-10 top-0 -z-10 h-[537px] w-[558px] rounded-full bg-brand/15 blur-[250px]"></div>
+
+  <div class="mx-auto w-full max-w-[1170px] px-4">
+    <div class="grid grid-cols-[1fr_1.1fr] items-start gap-[60px] min-[1280px]:gap-[80px] max-lg:grid-cols-1 max-lg:gap-10">
+      <div>
+        <h1
+          data-reveal
+          class="mb-6 text-[clamp(2.25rem,1.75rem+2.1333vw,3.5rem)] font-bold leading-[1.18]"
+        >
+          {copy.heading}
+        </h1>
+        <p data-reveal class="mb-8" style="--reveal-delay:80ms">{copy.subtitle}</p>
+
+        <ul data-reveal class="mb-10 flex flex-col gap-4" style="--reveal-delay:160ms">
+          {
+            copy.bullets.map((b) => (
+              <li class="flex items-start gap-3">
+                <CheckIcon />
+                <span>{b}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div data-reveal class="rounded-2xl bg-surface p-6" style="--reveal-delay:240ms">
+          <div class="mb-1.5 font-bold leading-[1.33]">{copy.asideTitle}</div>
+          <p class="mb-5 text-base leading-[1.6]">{copy.asideText}</p>
+          <Button label={copy.contactLabel} href={INQUIRY_MAILTO} variant="black" />
+        </div>
+      </div>
+
+      <div data-reveal style="--reveal-delay:120ms">
+        <BookingEmbed />
+      </div>
+    </div>
+  </div>
+</section>

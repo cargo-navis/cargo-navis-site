@@ -1,19 +1,24 @@
 ---
 import { Image } from 'astro:assets';
 import Button from './Button.astro';
-import { footer, logomark } from '../data/home';
+import { footer, demoHref, logomark } from '../data/home';
+import { getLocale, useTranslations, localizePath } from '../i18n/utils';
+
+const locale = getLocale(Astro.url);
+const t = useTranslations(locale);
+const homeHref = localizePath('/', locale);
 ---
 
-<footer class="pb-[30px]">
+<footer class="pt-[60px] pb-[30px] max-md:pt-10">
   <div class="mx-auto w-full max-w-[1170px] px-4">
     <div class="mb-[50px] flex justify-between gap-[130px] min-[1280px]:mb-[60px] max-lg:flex-wrap max-lg:gap-[60px] max-[479px]:gap-10">
       <!-- logo column -->
       <div data-reveal class="max-w-[310px] max-lg:max-w-[600px]">
-        <a href="/" class="mb-6 inline-flex items-center">
+        <a href={homeHref} class="mb-6 inline-flex items-center">
           <Image src={logomark} alt="Logo" class="w-[42px]" />
         </a>
-        <p class="mb-6">{footer.tagline}</p>
-        <Button label={footer.cta.label} href={footer.cta.href} />
+        <p class="mb-6">{t('footer.tagline')}</p>
+        <Button label={t('cta.demo')} href={localizePath(demoHref, locale)} />
       </div>
 
       <!-- menu columns -->
@@ -21,14 +26,14 @@ import { footer, logomark } from '../data/home';
         {
           footer.menus.map((menu) => (
             <div data-reveal class="max-w-[154px]">
-              <div class="mb-4 font-semibold leading-[1.55]">{menu.title}</div>
+              <div class="mb-4 font-semibold leading-[1.55]">{t(menu.titleKey)}</div>
               <div class="flex flex-col gap-3">
                 {menu.links.map((l) => (
                   <a
-                    href={l.href}
+                    href={localizePath(l.href, locale)}
                     class="text-base leading-[1.75] transition-colors duration-300 hover:text-brand"
                   >
-                    {l.label}
+                    {t(l.key)}
                   </a>
                 ))}
               </div>
@@ -38,11 +43,8 @@ import { footer, logomark } from '../data/home';
 
         <!-- contact column -->
         <div data-reveal class="max-w-[230px] max-[479px]:max-w-none">
-          <div class="mb-4 font-semibold leading-[1.55]">{footer.contact.title}</div>
+          <div class="mb-4 font-semibold leading-[1.55]">{t('footer.contact')}</div>
           <div class="flex flex-col gap-3">
-            <a href={footer.contact.phone.href} class="text-base leading-[1.75] transition-colors duration-300 hover:text-brand">
-              {footer.contact.phone.label}
-            </a>
             <a href={footer.contact.email.href} class="text-base leading-[1.75] transition-colors duration-300 hover:text-brand">
               {footer.contact.email.label}
             </a>

@@ -1,0 +1,29 @@
+---
+import Navbar from './Navbar.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  heading: string;
+  updatedLabel: string;
+}
+const { heading, updatedLabel } = Astro.props;
+---
+
+<Navbar />
+
+<main class="relative z-[6] overflow-clip pb-[100px] pt-[188px] max-lg:pb-20 max-lg:pt-[170px] max-md:pb-[60px] max-md:pt-40 max-[479px]:pt-[140px]">
+  <div class="pointer-events-none absolute left-10 top-0 -z-10 h-[537px] w-[558px] rounded-full bg-brand/15 blur-[250px]"></div>
+
+  <div class="mx-auto w-full max-w-[1170px] px-4">
+    <h1 class="mb-3 text-[clamp(2.25rem,1.75rem+2.1333vw,3.5rem)] font-bold leading-[1.18]">
+      {heading}
+    </h1>
+    <p class="mb-12 text-base text-brand-secondary/70">{updatedLabel}</p>
+
+    <div class="legal-prose">
+      <slot />
+    </div>
+  </div>
+</main>
+
+<Footer />
