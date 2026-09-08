@@ -1,0 +1,27 @@
+---
+import { BOOKING_SCHEDULE_URL } from '../consts';
+import { getLocale, useTranslations } from '../i18n/utils';
+
+interface Props {
+  /** Iframe height in px. Google's schedule view does not auto-resize (cross-origin). */
+  height?: number;
+  class?: string;
+}
+
+const { height = 640, class: klass = '' } = Astro.props;
+const locale = getLocale(Astro.url);
+const t = useTranslations(locale);
+---
+
+{/* The calendar always loads. `loading="lazy"` still holds the request back
+    until the frame is near the viewport, but no consent is required. */}
+<div class={`overflow-hidden rounded-2xl bg-white shadow-[0_2px_20px_rgba(30,30,30,0.08)] ${klass}`}>
+  <iframe
+    src={BOOKING_SCHEDULE_URL}
+    title={t('booking.iframe.title')}
+    loading="lazy"
+    width="100%"
+    height={height}
+    style="border:0"
+    class="block w-full"></iframe>
+</div>

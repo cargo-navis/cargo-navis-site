@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import Button from './Button.astro';
 import CheckIcon from './CheckIcon.astro';
-import { INQUIRY, type FeatureRow } from '../data/home';
+import { demoHref, type FeatureRow } from '../data/home';
 
 interface Props {
   row: FeatureRow;
@@ -56,7 +56,7 @@ const { row } = Astro.props;
     }
 
     <div data-reveal class="mt-8">
-      <Button label="Pošaljite upit" href={INQUIRY} />
+      <Button label="Dogovori demo" href={demoHref} />
     </div>
   </div>
 </div>

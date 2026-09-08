@@ -1,0 +1,225 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LegalPageShell from '../components/LegalPageShell.astro';
+import { LEGAL, PRIVACY_PATH } from '../consts';
+import { recipients } from '../data/legal';
+
+const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('hr-HR', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<Layout
+  path={PRIVACY_PATH}
+  title="Politika privatnosti - Cargo Navis"
+  description="Kako Cargo Navis d.o.o. prikuplja, koristi i štiti osobne podatke posjetitelja web-stranice i korisnika aplikacije."
+>
+  <LegalPageShell heading="Politika privatnosti" updatedLabel={`Zadnje ažuriranje: ${updated}`}>
+    <h2>1. Uvod</h2>
+    <p>
+      {LEGAL.companyName} (dalje: „Cargo Navis“, „mi“) poštuje vašu privatnost i obvezuje se na
+      zaštitu osobnih podataka. Ova politika objašnjava koje podatke prikupljamo putem web-stranice
+      <a href="https://www.cargo-navis.com">www.cargo-navis.com</a> i aplikacije
+      <a href="https://app.cargo-navis.com">app.cargo-navis.com</a>, zašto ih obrađujemo, s kim ih
+      dijelimo i koja prava imate.
+    </p>
+    <p>
+      Podatke obrađujemo u skladu s Uredbom (EU) 2016/679 (Opća uredba o zaštiti podataka, „GDPR“) i
+      Zakonom o provedbi Opće uredbe o zaštiti podataka.
+    </p>
+
+    <h2>2. Voditelj obrade</h2>
+    <p>
+      Voditelj obrade osobnih podataka je:
+    </p>
+    <ul>
+      <li><strong>{LEGAL.companyName}</strong></li>
+      <li>OIB: {LEGAL.oib}</li>
+      <li>{LEGAL.addressLines.join(', ')}</li>
+      <li>E-mail: <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a></li>
+    </ul>
+
+    <h2>3. Pojmovi</h2>
+    <p>
+      <strong>Osobni podatak</strong> je svaki podatak koji se odnosi na pojedinca čiji je identitet
+      utvrđen ili se može utvrditi - primjerice ime, e-mail adresa, broj telefona ili IP adresa.
+    </p>
+    <p>
+      <strong>Obrada</strong> je svaki postupak koji se obavlja nad osobnim podacima, uključujući
+      prikupljanje, bilježenje, pohranu, uporabu, otkrivanje i brisanje.
+    </p>
+
+    <h2>4. Podaci koje prikupljamo</h2>
+
+    <h3>4.1. Posjetitelji web-stranice</h3>
+    <p>
+      Prilikom posjeta stranici naš poslužitelj automatski bilježi tehničke podatke nužne za
+      isporuku sadržaja i sigurnost: IP adresu, vrstu i verziju preglednika, operativni sustav,
+      datum i vrijeme zahtjeva te zatraženu adresu. Ne koristimo kolačiće za praćenje niti alate za
+      analitiku posjećenosti.
+    </p>
+
+    <h3>4.2. Dogovaranje demo termina</h3>
+    <p>
+      Ako rezervirate demo termin putem naše stranice, rezervaciju obrađuje Google Calendar
+      Appointment Schedules. Pri rezervaciji unosite ime, e-mail adresu i, po želji, kratku poruku o
+      svom poslovanju. Te podatke koristimo isključivo za organizaciju i održavanje sastanka te za
+      naknadnu komunikaciju o vašem upitu.
+    </p>
+
+    <h3>4.3. Kontakt e-mailom</h3>
+    <p>
+      Kada nam pišete e-mailom, obrađujemo vašu e-mail adresu, sadržaj poruke i sve podatke koje nam
+      sami odlučite poslati, kako bismo odgovorili na vaš upit.
+    </p>
+
+    <h3>4.4. Korisnici aplikacije</h3>
+    <p>
+      Za korisnike aplikacije Cargo Navis obrađujemo podatke o računu (ime i prezime, poslovna
+      e-mail adresa, uloga u tvrtki), podatke o korištenju sustava te sadržaj koji korisnici unose -
+      primjerice podatke o nalozima, vozilima, vozačima i dokumentaciji. U odnosu na podatke koje
+      naši klijenti unose u aplikaciju, klijent je voditelj obrade, a Cargo Navis izvršitelj obrade
+      koji postupa prema uputama klijenta i sklopljenom ugovoru o obradi podataka.
+    </p>
+
+    <h2>5. Svrhe i pravne osnove obrade</h2>
+    <ul>
+      <li>
+        <strong>Isporuka i sigurnost web-stranice</strong> - legitimni interes (čl. 6. st. 1. t. f
+        GDPR-a) da stranica radi ispravno i bude zaštićena od zlouporabe.
+      </li>
+      <li>
+        <strong>Dogovaranje demo termina i odgovaranje na upite</strong> - poduzimanje radnji na
+        zahtjev ispitanika prije sklapanja ugovora (čl. 6. st. 1. t. b) odnosno legitimni interes u
+        poslovnoj komunikaciji.
+      </li>
+      <li>
+        <strong>Učitavanje vanjskog sadržaja (Google Calendar)</strong> - legitimni interes (čl. 6.
+        st. 1. t. f GDPR-a) da na stranici prikažemo kalendar za dogovaranje demo termina.
+      </li>
+      <li>
+        <strong>Pružanje usluge aplikacije</strong> - izvršavanje ugovora s klijentom (čl. 6. st. 1.
+        t. b) te ispunjenje zakonskih obveza (čl. 6. st. 1. t. c) u dijelu koji se odnosi na
+        računovodstvenu dokumentaciju.
+      </li>
+    </ul>
+
+    <h2>6. Primatelji podataka</h2>
+    <p>
+      Osobne podatke ne prodajemo. Dijelimo ih samo s pružateljima usluga kojima se koristimo za
+      pružanje naše usluge, u opsegu koji je za to nužan:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Pružatelj usluge</th>
+          <th>Lokacija obrade</th>
+          <th>Svrha</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          recipients.map((p) => (
+            <tr>
+              <td>{p.name}</td>
+              <td>{p.location.hr}</td>
+              <td>{p.purpose.hr}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <p>
+      Podatke možemo otkriti i nadležnim tijelima kada to zahtijeva zakon te našim knjigovodstvenim
+      i pravnim savjetnicima koji su vezani obvezom čuvanja povjerljivosti.
+    </p>
+
+    <h2>7. Prijenos podataka izvan EGP-a</h2>
+    <p>
+      Baza podataka aplikacije smještena je u Njemačkoj (Hetzner). Pojedini pružatelji usluga -
+      Vercel, Resend, Google i Meta (WhatsApp) - mogu podatke obrađivati i izvan Europskog
+      gospodarskog prostora,
+      prije svega u Sjedinjenim Američkim Državama. U tim se slučajevima prijenos temelji na
+      standardnim ugovornim klauzulama Europske komisije ili drugom valjanom mehanizmu iz poglavlja
+      V. GDPR-a.
+    </p>
+
+    <h2>8. Razdoblje čuvanja</h2>
+    <ul>
+      <li>Tehnički zapisi poslužitelja - do 30 dana.</li>
+      <li>
+        Komunikacija o upitima i demo terminima - do 24 mjeseca od zadnjeg kontakta, osim ako iz nje
+        proizađe ugovorni odnos.
+      </li>
+      <li>Podaci o korisničkom računu - za vrijeme trajanja ugovora i 30 dana nakon prestanka.</li>
+      <li>
+        Računovodstvena dokumentacija - 11 godina, sukladno propisima o računovodstvu i porezima.
+      </li>
+    </ul>
+
+    <h2>9. Vaša prava</h2>
+    <p>U odnosu na svoje osobne podatke imate pravo na:</p>
+    <ul>
+      <li><strong>Pristup</strong> - potvrdu obrađujemo li vaše podatke i kopiju tih podataka.</li>
+      <li><strong>Ispravak</strong> - ispravljanje netočnih ili dopunu nepotpunih podataka.</li>
+      <li><strong>Brisanje</strong> - brisanje podataka kada više nisu potrebni za navedene svrhe.</li>
+      <li><strong>Ograničenje obrade</strong> - u slučajevima predviđenima GDPR-om.</li>
+      <li><strong>Prenosivost</strong> - primitak podataka u strukturiranom, strojno čitljivom formatu.</li>
+      <li><strong>Prigovor</strong> - na obradu koja se temelji na našem legitimnom interesu.</li>
+      <li>
+        <strong>Povlačenje privole</strong> - u svakom trenutku, bez utjecaja na zakonitost obrade
+        prije povlačenja.
+      </li>
+    </ul>
+    <p>
+      Zahtjev možete poslati na <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a>.
+      Odgovaramo bez nepotrebnog odgađanja, a najkasnije u roku od mjesec dana od zaprimanja
+      zahtjeva. Ovisno o složenosti i broju zahtjeva taj se rok može produljiti za dodatna dva
+      mjeseca, o čemu ćemo vas obavijestiti. Ako smatrate da su vam prava povrijeđena, možete
+      podnijeti pritužbu Agenciji za zaštitu osobnih podataka (AZOP),
+      <a href="https://azop.hr" target="_blank" rel="noopener noreferrer">azop.hr</a>.
+    </p>
+
+    <h2>10. Kolačići i vanjski sadržaj</h2>
+    <p>
+      Ova stranica ne koristi kolačiće za analitiku, oglašavanje ni praćenje posjetitelja i ne
+      postavlja vlastite kolačiće.
+    </p>
+    <p>
+      Na stranici <a href="/demo">Dogovori demo</a> ugrađen je Google Calendar. Otvaranjem te
+      stranice sadržaj se učitava izravno s Googleovih poslužitelja, pri čemu Google može postaviti
+      vlastite kolačiće i obrađivati vašu IP adresu sukladno
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+        Googleovoj politici privatnosti
+      </a>. Ako to ne želite, demo termin možete dogovoriti i e-mailom, bez otvaranja te stranice.
+    </p>
+
+    <h2>11. Privatnost djece</h2>
+    <p>
+      Naše usluge namijenjene su poslovnim korisnicima i nisu namijenjene osobama mlađima od 16
+      godina. Svjesno ne prikupljamo podatke djece. Ako saznamo da smo takve podatke prikupili,
+      obrisat ćemo ih bez odgode.
+    </p>
+
+    <h2>12. Sigurnost</h2>
+    <p>
+      Primjenjujemo odgovarajuće tehničke i organizacijske mjere zaštite, uključujući enkripciju
+      prometa (HTTPS), kontrolu pristupa po načelu nužnog pristupa i redovite sigurnosne kopije.
+    </p>
+
+    <h2>13. Izmjene politike</h2>
+    <p>
+      Ovu politiku možemo povremeno ažurirati. Datum zadnje izmjene naveden je na vrhu stranice. O
+      značajnim promjenama obavijestit ćemo korisnike e-mailom ili obaviješću u aplikaciji.
+    </p>
+
+    <h2>14. Kontakt</h2>
+    <p>
+      Za sva pitanja o ovoj politici ili obradi vaših podataka javite se na
+      <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a> ili poštom na adresu
+      {LEGAL.addressLines.join(', ')}.
+    </p>
+  </LegalPageShell>
+</Layout>

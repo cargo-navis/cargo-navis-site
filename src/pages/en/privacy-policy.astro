@@ -1,0 +1,217 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import LegalPageShell from '../../components/LegalPageShell.astro';
+import { LEGAL, PRIVACY_PATH } from '../../consts';
+import { recipients } from '../../data/legal';
+
+const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<Layout
+  path={PRIVACY_PATH}
+  title="Privacy Policy - Cargo Navis"
+  description="How Cargo Navis d.o.o. collects, uses and protects the personal data of website visitors and application users."
+>
+  <LegalPageShell heading="Privacy Policy" updatedLabel={`Last updated: ${updated}`}>
+    <h2>1. Introduction</h2>
+    <p>
+      {LEGAL.companyName} (“Cargo Navis”, “we”) respects your privacy and is committed to protecting
+      your personal data. This policy explains what data we collect through the website
+      <a href="https://www.cargo-navis.com">www.cargo-navis.com</a> and the application
+      <a href="https://app.cargo-navis.com">app.cargo-navis.com</a>, why we process it, who we share
+      it with, and what rights you have.
+    </p>
+    <p>
+      We process personal data in accordance with Regulation (EU) 2016/679 (the General Data
+      Protection Regulation, “GDPR”) and Croatian data protection legislation.
+    </p>
+
+    <h2>2. Data controller</h2>
+    <p>The controller of your personal data is:</p>
+    <ul>
+      <li><strong>{LEGAL.companyName}</strong></li>
+      <li>Company ID (OIB): {LEGAL.oib}</li>
+      <li>{LEGAL.addressLines.join(', ')}</li>
+      <li>Email: <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a></li>
+    </ul>
+
+    <h2>3. Definitions</h2>
+    <p>
+      <strong>Personal data</strong> means any information relating to an identified or identifiable
+      individual - for example a name, email address, phone number or IP address.
+    </p>
+    <p>
+      <strong>Processing</strong> means any operation performed on personal data, including
+      collection, recording, storage, use, disclosure and erasure.
+    </p>
+
+    <h2>4. Data we collect</h2>
+
+    <h3>4.1. Website visitors</h3>
+    <p>
+      When you visit the site, our server automatically logs technical data needed to deliver
+      content and keep the service secure: IP address, browser type and version, operating system,
+      date and time of the request, and the requested URL. We use no tracking cookies and no website
+      analytics tools.
+    </p>
+
+    <h3>4.2. Booking a demo</h3>
+    <p>
+      If you book a demo through our site, the booking is handled by Google Calendar Appointment
+      Schedules. You provide your name, email address and, optionally, a short note about your
+      business. We use this only to arrange and hold the meeting and to follow up on your enquiry.
+    </p>
+
+    <h3>4.3. Contacting us by email</h3>
+    <p>
+      When you email us, we process your email address, the content of your message and any details
+      you choose to send, in order to answer your enquiry.
+    </p>
+
+    <h3>4.4. Application users</h3>
+    <p>
+      For users of the Cargo Navis application we process account data (name, business email
+      address, role), usage data, and the content users enter - such as orders, vehicles, drivers
+      and documents. With respect to data our clients enter into the application, the client is the
+      controller and Cargo Navis acts as a processor, working on the client's instructions under a
+      data processing agreement.
+    </p>
+
+    <h2>5. Purposes and legal bases</h2>
+    <ul>
+      <li>
+        <strong>Delivering and securing the website</strong> - legitimate interest (Art. 6(1)(f)
+        GDPR) in keeping the site working and protected from abuse.
+      </li>
+      <li>
+        <strong>Booking demos and answering enquiries</strong> - steps taken at your request prior
+        to entering into a contract (Art. 6(1)(b)), or our legitimate interest in business
+        communication.
+      </li>
+      <li>
+        <strong>Loading external content (Google Calendar)</strong> - legitimate interest (Art.
+        6(1)(f) GDPR) in showing the demo booking calendar on the site.
+      </li>
+      <li>
+        <strong>Providing the application</strong> - performance of a contract with the client (Art.
+        6(1)(b)) and compliance with legal obligations (Art. 6(1)(c)) for accounting records.
+      </li>
+    </ul>
+
+    <h2>6. Recipients</h2>
+    <p>
+      We do not sell personal data. We share it only with the service providers we use to run our
+      service, and only to the extent necessary:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Provider</th>
+          <th>Processing location</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          recipients.map((p) => (
+            <tr>
+              <td>{p.name}</td>
+              <td>{p.location.en}</td>
+              <td>{p.purpose.en}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <p>
+      We may also disclose data to competent authorities where required by law, and to our
+      accounting and legal advisers, who are bound by confidentiality.
+    </p>
+
+    <h2>7. Transfers outside the EEA</h2>
+    <p>
+      The application database is hosted in Germany (Hetzner). Some providers - Vercel, Resend,
+      Google and Meta (WhatsApp) - may process data outside the European Economic Area, primarily in
+      the United States.
+      Where they do, the transfer relies on the European Commission's Standard Contractual Clauses
+      or another valid mechanism under Chapter V of the GDPR.
+    </p>
+
+    <h2>8. Retention</h2>
+    <ul>
+      <li>Technical server logs - up to 30 days.</li>
+      <li>
+        Enquiry and demo correspondence - up to 24 months from the last contact, unless it leads to
+        a contract.
+      </li>
+      <li>Account data - for the duration of the contract and 30 days after it ends.</li>
+      <li>Accounting records - 11 years, as required by Croatian accounting and tax law.</li>
+    </ul>
+
+    <h2>9. Your rights</h2>
+    <p>In relation to your personal data you have the right to:</p>
+    <ul>
+      <li><strong>Access</strong> - confirmation of whether we process your data, and a copy of it.</li>
+      <li><strong>Rectification</strong> - correction of inaccurate or completion of incomplete data.</li>
+      <li><strong>Erasure</strong> - deletion of data once it is no longer needed for these purposes.</li>
+      <li><strong>Restriction of processing</strong> - in the cases set out in the GDPR.</li>
+      <li><strong>Portability</strong> - receipt of your data in a structured, machine-readable format.</li>
+      <li><strong>Objection</strong> - to processing based on our legitimate interest.</li>
+      <li>
+        <strong>Withdrawal of consent</strong> - at any time, without affecting the lawfulness of
+        processing before withdrawal.
+      </li>
+    </ul>
+    <p>
+      Send requests to <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a>. We respond
+      without undue delay and in any event within one month of receiving the request. Where requests
+      are complex or numerous, that period may be extended by a further two months; we will tell you
+      if that happens. If you believe your rights have been infringed, you may lodge
+      a complaint with the Croatian Personal Data Protection Agency (AZOP),
+      <a href="https://azop.hr" target="_blank" rel="noopener noreferrer">azop.hr</a>.
+    </p>
+
+    <h2>10. Cookies and external content</h2>
+    <p>
+      This site uses no analytics, advertising or tracking cookies, and sets no cookies of its own.
+    </p>
+    <p>
+      The <a href="/en/demo">Book a demo</a> page embeds Google Calendar. Opening that page loads
+      the content directly from Google's servers, and Google may set its own cookies and process
+      your IP address in accordance with
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+        Google's privacy policy
+      </a>. If you would rather it did not, you can book by emailing us instead of opening that
+      page.
+    </p>
+
+    <h2>11. Children's privacy</h2>
+    <p>
+      Our services are intended for business users and are not directed at anyone under 16. We do
+      not knowingly collect children's data. If we learn that we have, we delete it without delay.
+    </p>
+
+    <h2>12. Security</h2>
+    <p>
+      We apply appropriate technical and organisational safeguards, including encrypted transport
+      (HTTPS), least-privilege access control and regular backups.
+    </p>
+
+    <h2>13. Changes to this policy</h2>
+    <p>
+      We may update this policy from time to time. The date of the last change is shown at the top
+      of the page. We will notify users of significant changes by email or in-app notice.
+    </p>
+
+    <h2>14. Contact</h2>
+    <p>
+      For any questions about this policy or how we handle your data, contact
+      <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a> or write to us at
+      {LEGAL.addressLines.join(', ')}.
+    </p>
+  </LegalPageShell>
+</Layout>

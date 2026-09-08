@@ -1,0 +1,80 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import Button from '../components/Button.astro';
+import { DEMO_PATH } from '../consts';
+
+// A single static 404.html is served for every unmatched path, including the
+// /en/ tree, so the page ships both languages and reveals the one matching the
+// URL (see the inline script below). Croatian shows when JS is unavailable.
+const copy = [
+  {
+    lang: 'hr',
+    heading: 'Stranica nije pronađena',
+    text: 'Stranica koju tražite ne postoji ili je premještena. Vratite se na početnu ili dogovorite demo termin.',
+    home: 'Natrag na početnu',
+    demo: 'Dogovori demo',
+  },
+  {
+    lang: 'en',
+    heading: 'Page not found',
+    text: 'The page you are looking for does not exist or has moved. Head back home, or book a demo.',
+    home: 'Back to home',
+    demo: 'Book a demo',
+  },
+];
+---
+
+<Layout
+  path="/404"
+  noindex
+  title="404 - Cargo Navis"
+  description="Stranica nije pronađena / Page not found."
+>
+  {/* Runs before the copy below is parsed, so only one language ever paints. */}
+  <script is:inline>
+    if (location.pathname === '/en' || location.pathname.indexOf('/en/') === 0) {
+      document.documentElement.dataset.pageLang = 'en';
+      document.documentElement.lang = 'en';
+    }
+  </script>
+
+  <Navbar />
+
+  <main class="relative z-[6] overflow-clip pb-[160px] pt-[240px] max-lg:pb-[130px] max-lg:pt-[220px] max-md:pb-[100px] max-md:pt-[200px] max-[479px]:pt-[180px]">
+    <div class="pointer-events-none absolute right-[18%] top-[13px] -z-10 h-[537px] w-[558px] rounded-full bg-brand/40 blur-[250px]"></div>
+    <div class="pointer-events-none absolute left-10 top-0 -z-10 h-[537px] w-[558px] rounded-full bg-brand/15 blur-[250px]"></div>
+
+    <div class="mx-auto w-full max-w-[760px] px-4 text-center">
+      <div
+        data-reveal
+        class="mb-6 text-[clamp(5rem,3rem+10vw,10rem)] font-bold leading-none text-brand"
+        aria-hidden="true"
+      >
+        404
+      </div>
+
+      {
+        copy.map((c) => (
+          <div data-reveal data-404-lang={c.lang} lang={c.lang} class="mb-10" style="--reveal-delay:80ms">
+            <h1 class="mb-4 text-[clamp(1.75rem,1.4rem+1.5vw,2.5rem)] font-bold leading-[1.2]">
+              {c.heading}
+            </h1>
+            <p class="mx-auto max-w-[520px]">{c.text}</p>
+            <div class="mt-7 flex flex-wrap justify-center gap-3">
+              <Button label={c.home} href={c.lang === 'hr' ? '/' : '/en/'} />
+              <Button
+                label={c.demo}
+                href={c.lang === 'hr' ? DEMO_PATH : `/en${DEMO_PATH}`}
+                variant="black"
+              />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

@@ -3,7 +3,8 @@
 // carry rich inline markup + alternating layout that doesn't map cleanly to MDX.
 // The collections (Step 3) remain for future dedicated feature pages / changelog.
 import type { ImageMetadata } from 'astro';
-import { INQUIRY_MAILTO, LOGIN_URL } from '../consts';
+import type { UIKey } from '../i18n/ui';
+import { DEMO_PATH, INQUIRY_MAILTO, LOGIN_URL, PRIVACY_PATH, SITE } from '../consts';
 
 // Screenshots
 import heroA from '../assets/img/cleanshot-2026-01-05-at-15.17.53.webp';
@@ -27,22 +28,24 @@ import animago from '../assets/logos/animago.webp';
 import lust from '../assets/logos/lust-transporti.webp';
 
 export { logomark, shape };
-export const INQUIRY = INQUIRY_MAILTO;
 
-export const navLinks = [
-  { label: 'Početna', href: '/' },
-  { label: 'O nama', href: '#About' },
-  { label: 'Značajke', href: '#Feature' },
-  { label: 'Recenzije', href: '#Review' },
-  { label: 'Kontakt', href: '#Cta' },
+// Labels resolve through i18n; hrefs are locale-agnostic and get prefixed by the
+// component. Section anchors are absolute (`/#About`) so they also work from /demo.
+export const navLinks: { key: UIKey; href: string }[] = [
+  { key: 'nav.home', href: '/' },
+  { key: 'nav.about', href: '/#About' },
+  { key: 'nav.features', href: '/#Feature' },
+  { key: 'nav.reviews', href: '/#Review' },
+  { key: 'nav.contact', href: '/#Cta' },
 ];
 export const loginHref = LOGIN_URL;
+export const demoHref = DEMO_PATH;
 
 export const hero = {
   heading: 'Upravljajte logistikom uz Cargo Navis',
   subtitle:
     'Jednostavno upravljajte vozilima, zaposlenicima i pošiljkama na jedinstvenoj i moćnoj platformi.',
-  cta: { label: 'Pošaljite upit', href: INQUIRY_MAILTO },
+  cta: { label: 'Dogovori demo', href: DEMO_PATH },
   images: {
     two: [
       { src: heroA, alt: 'Hero Image' },
@@ -134,7 +137,7 @@ export const features: FeatureRow[] = [
     reverse: true,
     title: 'Donosite odluke na temelju podataka, ne osjećaja.',
     paragraphs: [
-      'U svakom trenutku znajte koliko zarađujete, tko vam donosi najviše prihoda i gdje imate prostor za rast. Naša analitika daje vam potpunu sliku poslovanja — kroz prihod, broj naloga i performanse vozila, vozača i klijenata.<br><br>Filtrirajte podatke po vremenu, vozaču, vozilu ili klijentu i u nekoliko sekundi dođite do točnih informacija koje su vam potrebne.',
+      'U svakom trenutku znajte koliko zarađujete, tko vam donosi najviše prihoda i gdje imate prostor za rast. Naša analitika daje vam potpunu sliku poslovanja - kroz prihod, broj naloga i performanse vozila, vozača i klijenata.<br><br>Filtrirajte podatke po vremenu, vozaču, vozilu ili klijentu i u nekoliko sekundi dođite do točnih informacija koje su vam potrebne.',
     ],
     image: { src: analitika, alt: 'Feature Image' },
   },
@@ -143,7 +146,7 @@ export const features: FeatureRow[] = [
     reverse: false,
     title: 'Digitalna arhiva -<br>Svi važni dokumenti na jednom mjestu.',
     paragraphs: [
-      'Zaboravite na izgubljene papire, e-mail privitke i nepregledne mape. S digitalnom arhivom svi vaši ključni dokumenti — nalozi, licence, ugovori i ostala dokumentacija — sigurno su <strong>pohranjeni</strong> <strong>i</strong> <strong>uvijek dostupni</strong>.',
+      'Zaboravite na izgubljene papire, e-mail privitke i nepregledne mape. S digitalnom arhivom svi vaši ključni dokumenti - nalozi, licence, ugovori i ostala dokumentacija - sigurno su <strong>pohranjeni</strong> <strong>i</strong> <strong>uvijek dostupni</strong>.',
     ],
     image: { src: fileUpload, alt: 'Feature Image' },
     bullets: [
@@ -187,34 +190,29 @@ export const testimonials = {
 export const cta = {
   heading: 'Preuzmite kontrolu nad svojim poslovanjem već danas!',
   paragraph:
-    'Isprobajte Cargo Navis već danas i digitalizirajte svoje poslovanje — bez razbacanih papira.',
-  button: { label: 'Pošaljite upit', href: INQUIRY_MAILTO },
+    'Isprobajte Cargo Navis već danas i digitalizirajte svoje poslovanje - bez razbacanih papira.',
+  button: { label: 'Dogovori demo', href: DEMO_PATH },
 };
 
 export const footer = {
-  tagline:
-    'Moderan alat za učinkovito upravljanje svim operacijama u transportnom poslovanju.',
-  cta: { label: 'Pošaljite upit', href: INQUIRY_MAILTO },
   menus: [
     {
-      title: 'Kompanija',
+      titleKey: 'footer.menu.company' as UIKey,
       links: [
-        { label: 'Početna', href: '/' },
-        { label: 'O nama', href: '#About' },
-        { label: 'Značajke', href: '#Feature' },
-        { label: 'Recenzije', href: '#Review' },
-        { label: 'Kontakt', href: '#Cta' },
+        { key: 'nav.home' as UIKey, href: '/' },
+        { key: 'nav.about' as UIKey, href: '/#About' },
+        { key: 'nav.features' as UIKey, href: '/#Feature' },
+        { key: 'nav.reviews' as UIKey, href: '/#Review' },
+        { key: 'nav.contact' as UIKey, href: '/#Cta' },
       ],
     },
     {
-      title: 'Predložak',
-      links: [{ label: 'Polica privatnosti', href: '/privacy-policy' }],
+      titleKey: 'footer.menu.legal' as UIKey,
+      links: [{ key: 'footer.privacy' as UIKey, href: PRIVACY_PATH }],
     },
   ],
   contact: {
-    title: 'Kontakt',
-    phone: { label: 'HR 37735986647', href: 'tel:(62)103405890' },
-    email: { label: 'info@cargo-navis.com', href: 'mailto:info@cargo-navis.com' },
+    email: { label: SITE.contactEmail, href: INQUIRY_MAILTO },
     address: 'Županjska ulica 21,<br>10000 Zagreb, Croatia',
   },
   copyright: '© 2026 Cargo Navis. Sva prava pridržana.',
