@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { SITE, META } from '../consts';
+import { SITE, META, LEGAL } from '../consts';
 import { getLocale } from '../i18n/utils';
 import { defaultLocale, locales } from '../i18n/ui';
 
@@ -39,6 +39,15 @@ const orgJsonLd = {
   url: SITE.url,
   logo: new URL('/android-chrome-512x512.png', SITE.url).href,
   email: SITE.contactEmail,
+  legalName: LEGAL.companyName,
+  vatID: `HR${LEGAL.oib}`,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Županjska ulica 21',
+    postalCode: '10000',
+    addressLocality: 'Zagreb',
+    addressCountry: 'HR',
+  },
 };
 ---
 
@@ -54,9 +63,10 @@ const orgJsonLd = {
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-    {/* hreflang alternates */}
-    {locales.map((loc) => <link rel="alternate" hreflang={loc} href={hrefFor(loc)} />)}
-    <link rel="alternate" hreflang="x-default" href={hrefFor(defaultLocale)} />
+    {/* hreflang alternates — skipped on noindex pages (e.g. 404), which have no
+        per-locale twin to point at. */}
+    {!noindex && locales.map((loc) => <link rel="alternate" hreflang={loc} href={hrefFor(loc)} />)}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={hrefFor(defaultLocale)} />}
 
     {/* Open Graph */}
     <meta property="og:type" content="website" />

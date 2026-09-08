@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getLocale, useTranslations } from '../../i18n/utils';
+import { getLocale, useTranslations, localizePath } from '../../i18n/utils';
+import { DEMO_PATH } from '../../consts';
 
 const locale = getLocale(Astro.url);
 const t = useTranslations(locale);
@@ -14,10 +15,10 @@ const t = useTranslations(locale);
       Scaffold layout active. Section rebuild lands in Step 5.
     </p>
     <a
-      href="#"
+      href={localizePath(DEMO_PATH, locale)}
       class="mt-8 inline-block rounded-lg bg-brand px-6 py-3 font-semibold text-white"
     >
-      {t('cta.book')}
+      {t('cta.demo')}
     </a>
   </main>
 </Layout>

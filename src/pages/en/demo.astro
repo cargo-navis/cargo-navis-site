@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import DemoSection from '../../components/DemoSection.astro';
+import LogoMarquee from '../../components/LogoMarquee.astro';
+import Footer from '../../components/Footer.astro';
+import { demo } from '../../data/demo';
+
+const copy = demo.en;
+// Testimonials are intentionally omitted here — the quotes in data/home.ts are
+// Croatian only. Add them back once translated copy exists.
+---
+
+<Layout path="/demo" title={copy.metaTitle} description={copy.metaDescription}>
+  <Navbar />
+  <DemoSection />
+  <main class="main-wrapper">
+    <LogoMarquee />
+  </main>
+  <Footer />
+</Layout>
