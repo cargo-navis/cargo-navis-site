@@ -18,3 +18,15 @@ export function localizePath(path: string, locale: Locale): string {
   const clean = path.startsWith('/') ? path : `/${path}`;
   return locale === defaultLocale ? clean : `/${locale}${clean === '/' ? '' : clean}`;
 }
+
+// Drop any locale prefix from a pathname, yielding the locale-agnostic path.
+// `/en/demo` -> `/demo`, `/en` -> `/`, `/demo` -> `/demo`.
+export function stripLocale(pathname: string): string {
+  const stripped = pathname.replace(new RegExp(`^/(${locales.join('|')})(?=/|$)`), '');
+  return stripped === '' ? '/' : stripped;
+}
+
+// The current page in another locale — what the language switcher links to.
+export function alternatePath(url: URL, locale: Locale): string {
+  return localizePath(stripLocale(url.pathname), locale);
+}

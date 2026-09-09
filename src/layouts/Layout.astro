@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { SITE, META, LEGAL } from '../consts';
-import { getLocale } from '../i18n/utils';
+import { getLocale, stripLocale } from '../i18n/utils';
 import { defaultLocale, locales } from '../i18n/ui';
 
 interface Props {
@@ -18,8 +18,7 @@ const meta = META[locale];
 const { title = meta.title, description = meta.description, path, ogImage, noindex = false } = Astro.props;
 
 // Derive the locale-agnostic path from the current URL when not passed explicitly.
-const strippedPath = Astro.url.pathname.replace(new RegExp(`^/(${locales.join('|')})(?=/|$)`), '');
-const rawPath = path ?? strippedPath;
+const rawPath = path ?? stripLocale(Astro.url.pathname);
 const cleanPath = rawPath === '' ? '/' : rawPath;
 
 const hrefFor = (loc: string) => {
@@ -72,6 +71,7 @@ const orgJsonLd = {
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:locale" content={locale === 'hr' ? 'hr_HR' : 'en_US'} />
+    <meta property="og:locale:alternate" content={locale === 'hr' ? 'en_US' : 'hr_HR'} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

@@ -1,9 +1,17 @@
 ---
 import { Image } from 'astro:assets';
-import { testimonials } from '../data/home';
+import { getHome } from '../data/home';
+import { getLocale, useTranslations } from '../i18n/utils';
+import { defaultLocale } from '../i18n/ui';
+
+const locale = getLocale(Astro.url);
+const t = useTranslations(locale);
+const { testimonials } = getHome(locale);
+// The quotes were given in Croatian; say so wherever they are shown translated.
+const showTranslatedNote = locale !== defaultLocale;
 ---
 
-<section id="Review" class="relative z-[3] pb-[100px] max-lg:pb-20 max-md:pb-[60px]">
+<section id="Review" class="relative z-[3] overflow-clip pb-[100px] max-lg:pb-20 max-md:pb-[60px]">
   <!-- decorative blobs -->
   <div class="pointer-events-none absolute bottom-[223px] left-[63px] -z-10 h-[576px] w-[584px] rounded-full bg-brand/15 blur-[250px] max-md:w-full"></div>
   <div class="pointer-events-none absolute bottom-[223px] right-[63px] -z-10 h-[537px] w-[558px] rounded-full bg-brand/70 blur-[250px]"></div>
@@ -37,5 +45,13 @@ import { testimonials } from '../data/home';
         ))
       }
     </div>
+
+    {
+      showTranslatedNote && (
+        <p data-reveal class="mt-6 text-center text-sm text-brand-secondary/70">
+          {t('testimonials.translated')}
+        </p>
+      )
+    }
   </div>
 </section>

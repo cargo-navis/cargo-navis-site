@@ -1,24 +1,26 @@
 ---
+// Mirror of src/pages/index.astro. Everything locale-specific resolves from the
+// URL inside the components, so the two files differ only in import depth.
 import Layout from '../../layouts/Layout.astro';
-import { getLocale, useTranslations, localizePath } from '../../i18n/utils';
-import { DEMO_PATH } from '../../consts';
-
-const locale = getLocale(Astro.url);
-const t = useTranslations(locale);
+import Navbar from '../../components/Navbar.astro';
+import Hero from '../../components/Hero.astro';
+import LogoMarquee from '../../components/LogoMarquee.astro';
+import About from '../../components/About.astro';
+import Features from '../../components/Features.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import Cta from '../../components/Cta.astro';
+import Footer from '../../components/Footer.astro';
 ---
 
 <Layout path="/">
-  <main class="mx-auto max-w-[var(--container-site)] px-6 py-24">
-    <h1 class="text-4xl font-black text-brand">Cargo Navis</h1>
-    <p class="mt-4 text-brand-secondary">
-      {/* Placeholder — full 1:1 rebuild lands in Step 5. */}
-      Scaffold layout active. Section rebuild lands in Step 5.
-    </p>
-    <a
-      href={localizePath(DEMO_PATH, locale)}
-      class="mt-8 inline-block rounded-lg bg-brand px-6 py-3 font-semibold text-white"
-    >
-      {t('cta.demo')}
-    </a>
+  <Navbar />
+  <Hero />
+  <main class="main-wrapper">
+    <LogoMarquee />
+    <About />
+    <Features />
+    <Testimonials />
+    <Cta />
   </main>
+  <Footer />
 </Layout>

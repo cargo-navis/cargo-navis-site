@@ -33,6 +33,12 @@ export const ui = {
     'contact.success': 'Poruka poslana. Javljamo se uskoro.',
     'contact.error': 'Slanje nije uspjelo. Pokušajte ponovno.',
     'booking.iframe.title': 'Kalendar za dogovaranje demo termina',
+    'lang.switch': 'Jezik',
+    'lang.hr': 'HR',
+    'lang.en': 'EN',
+    'about.video.play': 'Pokreni video',
+    'video.close': 'Zatvori video',
+    'testimonials.translated': 'Recenzije su izvorno napisane na hrvatskom jeziku.',
   },
   en: {
     'nav.home': 'Home',
@@ -61,6 +67,12 @@ export const ui = {
     'contact.success': 'Message sent. We’ll be in touch soon.',
     'contact.error': 'Sending failed. Please try again.',
     'booking.iframe.title': 'Demo booking calendar',
+    'lang.switch': 'Language',
+    'lang.hr': 'HR',
+    'lang.en': 'EN',
+    'about.video.play': 'Play video',
+    'video.close': 'Close video',
+    'testimonials.translated': 'Reviews were originally written in Croatian.',
   },
 } as const;
 

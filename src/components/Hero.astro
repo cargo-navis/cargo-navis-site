@@ -1,7 +1,12 @@
 ---
 import { Image } from 'astro:assets';
 import Button from './Button.astro';
-import { hero, shape } from '../data/home';
+import { getHome, demoHref, shape } from '../data/home';
+import { getLocale, useTranslations, localizePath } from '../i18n/utils';
+
+const locale = getLocale(Astro.url);
+const t = useTranslations(locale);
+const { hero } = getHome(locale);
 ---
 
 <header class="relative z-[6] overflow-clip pb-[100px] pt-[188px] max-lg:pb-20 max-lg:pt-[170px] max-md:pb-[60px] max-md:pt-40 max-[479px]:pt-[140px]">
@@ -20,18 +25,23 @@ import { hero, shape } from '../data/home';
         </h1>
         <p data-reveal class="mb-8" style="--reveal-delay:80ms">{hero.subtitle}</p>
         <div data-reveal class="flex max-lg:justify-center" style="--reveal-delay:160ms">
-          <Button label={hero.cta.label} href={hero.cta.href} />
+          <Button label={t('cta.demo')} href={localizePath(demoHref, locale)} />
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-5 max-lg:flex max-lg:justify-center max-[479px]:flex-wrap">
-        <div data-reveal="scale-80" class="grid grid-flow-row gap-4">
-          <Image src={hero.images.two[0].src} alt={hero.images.two[0].alt} class="rounded-[13px]" />
-          <Image src={hero.images.two[1].src} alt={hero.images.two[1].alt} class="rounded-[13px]" />
+      <!-- Screenshots are unreadable at phone widths; hidden below md.
+           Astro emits loading="lazy", so display:none also skips the download.
+           On tablet the block stacks below the copy: lay all four out in one
+           full-width row, each cropped to a uniform 190px so the strip reads
+           as a single band and stays short. Top-anchored to keep the headers. -->
+      <div class="grid grid-cols-2 gap-5 max-lg:flex max-lg:w-full max-lg:items-center max-lg:justify-center max-md:hidden">
+        <div data-reveal="scale-80" class="grid grid-flow-row gap-4 max-lg:min-w-0 max-lg:flex-1 max-lg:grid-flow-col">
+          <Image src={hero.images.two[0].src} alt={hero.images.two[0].alt} class="rounded-[13px] max-lg:h-[190px] max-lg:w-full max-lg:object-cover max-lg:object-top" />
+          <Image src={hero.images.two[1].src} alt={hero.images.two[1].alt} class="rounded-[13px] max-lg:h-[190px] max-lg:w-full max-lg:object-cover max-lg:object-top" />
         </div>
-        <div data-reveal="scale-80" class="grid grid-flow-row gap-5 self-center" style="--reveal-delay:120ms">
-          <Image src={hero.images.three.src} alt={hero.images.three.alt} class="w-[55%] justify-self-center rounded-xl" />
-          <Image src={hero.images.four.src} alt={hero.images.four.alt} class="rounded-2xl" />
+        <div data-reveal="scale-80" class="grid grid-flow-row gap-5 self-center max-lg:min-w-0 max-lg:flex-1 max-lg:grid-flow-col" style="--reveal-delay:120ms">
+          <Image src={hero.images.three.src} alt={hero.images.three.alt} class="w-[55%] justify-self-center rounded-xl max-lg:h-[190px] max-lg:w-full max-lg:object-cover max-lg:object-top" />
+          <Image src={hero.images.four.src} alt={hero.images.four.alt} class="rounded-2xl max-lg:h-[190px] max-lg:w-full max-lg:object-cover max-lg:object-top" />
         </div>
       </div>
     </div>
