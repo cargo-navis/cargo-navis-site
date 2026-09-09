@@ -1,7 +1,12 @@
 ---
 import { Image } from 'astro:assets';
 import VideoModal from './VideoModal.astro';
-import { about } from '../data/home';
+import { getHome } from '../data/home';
+import { getLocale, useTranslations } from '../i18n/utils';
+
+const locale = getLocale(Astro.url);
+const t = useTranslations(locale);
+const { about } = getHome(locale);
 
 // Split each stat value into numeric target + suffix for the count-up.
 const stats = about.stats.map((s) => {
@@ -31,7 +36,7 @@ const stats = about.stats.map((s) => {
         <button
           type="button"
           data-video-play
-          aria-label="Pokreni video"
+          aria-label={t('about.video.play')}
           class="flex h-[100px] w-[100px] items-center justify-center rounded-full bg-white text-brand shadow-[10px_15px_44px_#0e6a755e] max-lg:h-20 max-lg:w-20 max-[479px]:h-[60px] max-[479px]:w-[60px]"
         >
           <svg width="26" height="20" viewBox="0 0 15 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

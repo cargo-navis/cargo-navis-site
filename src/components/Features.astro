@@ -1,6 +1,10 @@
 ---
 import FeatureRow from './FeatureRow.astro';
-import { features } from '../data/home';
+import { getHome } from '../data/home';
+import { getLocale } from '../i18n/utils';
+
+const locale = getLocale(Astro.url);
+const { features } = getHome(locale);
 ---
 
 <section id="Feature" class="pb-[100px] max-lg:pb-20 max-md:pb-[60px]">

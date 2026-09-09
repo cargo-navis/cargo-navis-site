@@ -1,8 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import LegalPageShell from '../../components/LegalPageShell.astro';
-import { LEGAL, PRIVACY_PATH } from '../../consts';
+import { DEMO_PATH, LEGAL, PRIVACY_PATH } from '../../consts';
 import { recipients } from '../../data/legal';
+import { getLocale, localizePath } from '../../i18n/utils';
+
+const locale = getLocale(Astro.url);
 
 const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('en-GB', {
   day: 'numeric',
@@ -20,8 +23,8 @@ const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('en-GB', {
     <h2>1. Introduction</h2>
     <p>
       {LEGAL.companyName} (“Cargo Navis”, “we”) respects your privacy and is committed to protecting
-      your personal data. This policy explains what data we collect through the website
-      <a href="https://www.cargo-navis.com">www.cargo-navis.com</a> and the application
+      your personal data. This policy explains what data we collect through the website{' '}
+      <a href="https://www.cargo-navis.com">www.cargo-navis.com</a> and the application{' '}
       <a href="https://app.cargo-navis.com">app.cargo-navis.com</a>, why we process it, who we share
       it with, and what rights you have.
     </p>
@@ -171,7 +174,7 @@ const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('en-GB', {
       without undue delay and in any event within one month of receiving the request. Where requests
       are complex or numerous, that period may be extended by a further two months; we will tell you
       if that happens. If you believe your rights have been infringed, you may lodge
-      a complaint with the Croatian Personal Data Protection Agency (AZOP),
+      a complaint with the Croatian Personal Data Protection Agency (AZOP),{' '}
       <a href="https://azop.hr" target="_blank" rel="noopener noreferrer">azop.hr</a>.
     </p>
 
@@ -180,9 +183,9 @@ const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('en-GB', {
       This site uses no analytics, advertising or tracking cookies, and sets no cookies of its own.
     </p>
     <p>
-      The <a href="/en/demo">Book a demo</a> page embeds Google Calendar. Opening that page loads
+      The <a href={localizePath(DEMO_PATH, locale)}>Book a demo</a> page embeds Google Calendar. Opening that page loads
       the content directly from Google's servers, and Google may set its own cookies and process
-      your IP address in accordance with
+      your IP address in accordance with{' '}
       <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
         Google's privacy policy
       </a>. If you would rather it did not, you can book by emailing us instead of opening that
@@ -209,9 +212,8 @@ const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('en-GB', {
 
     <h2>14. Contact</h2>
     <p>
-      For any questions about this policy or how we handle your data, contact
-      <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a> or write to us at
-      {LEGAL.addressLines.join(', ')}.
+      For any questions about this policy or how we handle your data, contact{' '}
+      <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a>.
     </p>
   </LegalPageShell>
 </Layout>

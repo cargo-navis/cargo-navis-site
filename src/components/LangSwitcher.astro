@@ -1,0 +1,42 @@
+---
+import { locales } from '../i18n/ui';
+import { getLocale, useTranslations, alternatePath } from '../i18n/utils';
+
+interface Props {
+  class?: string;
+}
+const { class: klass = '' } = Astro.props;
+
+const locale = getLocale(Astro.url);
+const t = useTranslations(locale);
+
+// Same page, other language. There is no Accept-Language auto-redirect by
+// design — switching locale is always an explicit user action.
+const options = locales.map((loc) => ({
+  loc,
+  label: loc === 'hr' ? t('lang.hr') : t('lang.en'),
+  href: alternatePath(Astro.url, loc),
+  current: loc === locale,
+}));
+---
+
+<div class={`flex items-center gap-1 text-sm font-semibold ${klass}`} aria-label={t('lang.switch')}>
+  {
+    options.map((o, i) => (
+      <>
+        {i > 0 && <span class="text-brand-secondary/30" aria-hidden="true">|</span>}
+        <a
+          href={o.href}
+          hreflang={o.loc}
+          lang={o.loc}
+          aria-current={o.current ? 'true' : undefined}
+          class={`rounded px-1.5 py-1 transition-colors duration-300 ${
+            o.current ? 'text-brand' : 'text-brand-secondary/60 hover:text-brand'
+          }`}
+        >
+          {o.label}
+        </a>
+      </>
+    ))
+  }
+</div>
