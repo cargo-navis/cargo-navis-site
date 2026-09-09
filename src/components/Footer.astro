@@ -1,12 +1,14 @@
 ---
 import { Image } from 'astro:assets';
 import Button from './Button.astro';
-import { footer, demoHref, logomark } from '../data/home';
+import { getHome, demoHref, logomark } from '../data/home';
 import { getLocale, useTranslations, localizePath } from '../i18n/utils';
 
 const locale = getLocale(Astro.url);
 const t = useTranslations(locale);
+const { footer } = getHome(locale);
 const homeHref = localizePath('/', locale);
+const copyright = `© ${new Date().getFullYear()} Cargo Navis. ${t('footer.rights')}`;
 ---
 
 <footer class="pt-[60px] pb-[30px] max-md:pt-10">
@@ -55,7 +57,7 @@ const homeHref = localizePath('/', locale);
     </div>
 
     <div data-reveal class="flex justify-between gap-[30px] max-[479px]:flex-wrap">
-      <div class="max-[479px]:w-full">{footer.copyright}</div>
+      <div class="max-[479px]:w-full">{copyright}</div>
     </div>
   </div>
 </footer>

@@ -1,6 +1,11 @@
 ---
 import Button from './Button.astro';
-import { cta } from '../data/home';
+import { getHome, demoHref } from '../data/home';
+import { getLocale, useTranslations, localizePath } from '../i18n/utils';
+
+const locale = getLocale(Astro.url);
+const t = useTranslations(locale);
+const { cta } = getHome(locale);
 ---
 
 <section id="Cta" class="pb-[100px] max-lg:pb-20 max-md:pb-[60px]">
@@ -12,7 +17,7 @@ import { cta } from '../data/home';
         </h2>
         <p data-reveal class="mb-8" style="--reveal-delay:80ms">{cta.paragraph}</p>
         <div data-reveal style="--reveal-delay:160ms">
-          <Button label={cta.button.label} href={cta.button.href} />
+          <Button label={t('cta.demo')} href={localizePath(demoHref, locale)} />
         </div>
       </div>
     </div>

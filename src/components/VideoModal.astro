@@ -1,8 +1,12 @@
 ---
+import { getLocale, useTranslations } from '../i18n/utils';
+
 interface Props {
   videoId: string;
 }
 const { videoId } = Astro.props;
+const locale = getLocale(Astro.url);
+const t = useTranslations(locale);
 ---
 
 <div
@@ -17,7 +21,7 @@ const { videoId } = Astro.props;
     <button
       type="button"
       id="video-close"
-      aria-label="Zatvori video"
+      aria-label={t('video.close')}
       class="absolute -top-10 right-0 text-2xl font-bold text-white"
     >
       ✕

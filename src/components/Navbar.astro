@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Button from './Button.astro';
+import LangSwitcher from './LangSwitcher.astro';
 import { navLinks, loginHref, demoHref, logomark } from '../data/home';
 import { getLocale, useTranslations, localizePath } from '../i18n/utils';
 
@@ -31,6 +32,7 @@ const demo = localizePath(demoHref, locale);
       </nav>
 
       <div class="flex items-center gap-3">
+        <LangSwitcher class="max-lg:hidden" />
         <div class="max-lg:hidden">
           <Button label={t('cta.demo')} href={demo} />
         </div>
@@ -70,6 +72,7 @@ const demo = localizePath(demoHref, locale);
       <a href={loginHref} target="_blank" rel="noopener noreferrer" class="block py-2.5 font-bold text-brand">
         {t('nav.login')}
       </a>
+      <LangSwitcher class="justify-center pt-2.5" />
     </nav>
   </div>
 </header>

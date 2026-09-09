@@ -3,11 +3,14 @@ import { Image } from 'astro:assets';
 import Button from './Button.astro';
 import CheckIcon from './CheckIcon.astro';
 import { demoHref, type FeatureRow } from '../data/home';
+import { getLocale, useTranslations, localizePath } from '../i18n/utils';
 
 interface Props {
   row: FeatureRow;
 }
 const { row } = Astro.props;
+const locale = getLocale(Astro.url);
+const t = useTranslations(locale);
 ---
 
 <div class="grid grid-cols-2 items-center gap-[90px] min-[1280px]:gap-[113px] max-lg:gap-[30px] max-md:grid-cols-1 max-[479px]:gap-[50px]">
@@ -56,7 +59,7 @@ const { row } = Astro.props;
     }
 
     <div data-reveal class="mt-8">
-      <Button label="Dogovori demo" href={demoHref} />
+      <Button label={t('cta.demo')} href={localizePath(demoHref, locale)} />
     </div>
   </div>
 </div>

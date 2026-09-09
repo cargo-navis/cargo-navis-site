@@ -1,8 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LegalPageShell from '../components/LegalPageShell.astro';
-import { LEGAL, PRIVACY_PATH } from '../consts';
+import { DEMO_PATH, LEGAL, PRIVACY_PATH } from '../consts';
 import { recipients } from '../data/legal';
+import { getLocale, localizePath } from '../i18n/utils';
+
+const locale = getLocale(Astro.url);
 
 const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('hr-HR', {
   day: 'numeric',
@@ -20,8 +23,8 @@ const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('hr-HR', {
     <h2>1. Uvod</h2>
     <p>
       {LEGAL.companyName} (dalje: „Cargo Navis“, „mi“) poštuje vašu privatnost i obvezuje se na
-      zaštitu osobnih podataka. Ova politika objašnjava koje podatke prikupljamo putem web-stranice
-      <a href="https://www.cargo-navis.com">www.cargo-navis.com</a> i aplikacije
+      zaštitu osobnih podataka. Ova politika objašnjava koje podatke prikupljamo putem web-stranice{' '}
+      <a href="https://www.cargo-navis.com">www.cargo-navis.com</a> i aplikacije{' '}
       <a href="https://app.cargo-navis.com">app.cargo-navis.com</a>, zašto ih obrađujemo, s kim ih
       dijelimo i koja prava imate.
     </p>
@@ -178,7 +181,7 @@ const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('hr-HR', {
       Odgovaramo bez nepotrebnog odgađanja, a najkasnije u roku od mjesec dana od zaprimanja
       zahtjeva. Ovisno o složenosti i broju zahtjeva taj se rok može produljiti za dodatna dva
       mjeseca, o čemu ćemo vas obavijestiti. Ako smatrate da su vam prava povrijeđena, možete
-      podnijeti pritužbu Agenciji za zaštitu osobnih podataka (AZOP),
+      podnijeti pritužbu Agenciji za zaštitu osobnih podataka (AZOP),{' '}
       <a href="https://azop.hr" target="_blank" rel="noopener noreferrer">azop.hr</a>.
     </p>
 
@@ -188,9 +191,9 @@ const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('hr-HR', {
       postavlja vlastite kolačiće.
     </p>
     <p>
-      Na stranici <a href="/demo">Dogovori demo</a> ugrađen je Google Calendar. Otvaranjem te
+      Na stranici <a href={localizePath(DEMO_PATH, locale)}>Dogovori demo</a> ugrađen je Google Calendar. Otvaranjem te
       stranice sadržaj se učitava izravno s Googleovih poslužitelja, pri čemu Google može postaviti
-      vlastite kolačiće i obrađivati vašu IP adresu sukladno
+      vlastite kolačiće i obrađivati vašu IP adresu sukladno{' '}
       <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
         Googleovoj politici privatnosti
       </a>. Ako to ne želite, demo termin možete dogovoriti i e-mailom, bez otvaranja te stranice.
@@ -217,9 +220,8 @@ const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString('hr-HR', {
 
     <h2>14. Kontakt</h2>
     <p>
-      Za sva pitanja o ovoj politici ili obradi vaših podataka javite se na
-      <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a> ili poštom na adresu
-      {LEGAL.addressLines.join(', ')}.
+      Za sva pitanja o ovoj politici ili obradi vaših podataka javite se na{' '}
+      <a href={`mailto:${LEGAL.privacyEmail}`}>{LEGAL.privacyEmail}</a>.
     </p>
   </LegalPageShell>
 </Layout>
