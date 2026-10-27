@@ -96,7 +96,7 @@ const aboutSpine = {
   videoId: 'JHygu7fRKOQ',
   // Numeric values are locale-agnostic; only the labels are translated.
   stats: [
-    { id: 'companies', value: '25+' },
+    { id: 'companies', value: '35+' },
     { id: 'orders', value: '18k+' },
     { id: 'loads', value: '25k+' },
     { id: 'vehicles', value: '350+' },
