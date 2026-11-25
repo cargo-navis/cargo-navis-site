@@ -63,8 +63,16 @@ const { demoHref = localizePath(DEMO_PATH, locale) } = Astro.props;
 <p>
   Prilikom posjeta stranici naš poslužitelj automatski bilježi tehničke podatke nužne za isporuku
   sadržaja i sigurnost: IP adresu, vrstu i verziju preglednika, operativni sustav, datum i vrijeme
-  zahtjeva te zatraženu adresu. Ne koristimo kolačiće za praćenje niti alate za analitiku
-  posjećenosti.
+  zahtjeva te zatraženu adresu.
+</p>
+<p>
+  Također mjerimo kako se stranica koristi: pregledane stranice i vrijeme zadržavanja, stranicu ili
+  kampanju s koje ste došli, vrstu uređaja i preglednika te približnu lokaciju (država i grad)
+  utvrđenu iz IP adrese. Te podatke ne povezujemo s vama osobno i ne snimamo sesije. Posjeti se
+  broje bez kolačića i bez ikakvih podataka pohranjenih u vašem pregledniku: PostHog na svojim
+  poslužiteljima izračunava sažetak (hash) iz IP adrese i podataka o pregledniku, s ključem koji se
+  mijenja svaki dan, pa se posjeti ne mogu povezati iz dana u dan. Za to koristimo PostHog, s
+  podacima pohranjenima u Europskoj uniji.
 </p>
 
 <h3>4.2. Dogovaranje demo termina</h3>
@@ -91,6 +99,10 @@ const { demoHref = localizePath(DEMO_PATH, locale) } = Astro.props;
     <strong>Dogovaranje demo termina i odgovaranje na upite</strong> - poduzimanje radnji na zahtjev
     ispitanika prije sklapanja ugovora (čl. 6. st. 1. t. b) odnosno legitimni interes u poslovnoj
     komunikaciji.
+  </li>
+  <li>
+    <strong>Analitika posjećenosti (PostHog)</strong> - legitimni interes (čl. 6. st. 1. t. f
+    GDPR-a) da razumijemo kako posjetitelji pronalaze i koriste stranicu te da je poboljšamo.
   </li>
   <li>
     <strong>Učitavanje vanjskog sadržaja (Google Calendar)</strong> - legitimni interes (čl. 6. st. 1.
@@ -123,7 +135,8 @@ const { demoHref = localizePath(DEMO_PATH, locale) } = Astro.props;
 <h3>4.6. Kolačići i vanjski sadržaj</h3>
 <p>
   Web-stranica ne koristi kolačiće za analitiku, oglašavanje ni praćenje posjetitelja i ne postavlja
-  vlastite kolačiće.
+  vlastite kolačiće. Analitika posjećenosti (PostHog, točka 4.1) radi bez kolačića i ništa ne
+  pohranjuje u vašem pregledniku.
 </p>
 <p>
   Na stranici <a href={demoHref}>Dogovori demo</a> ugrađen je Google Calendar. Otvaranjem te stranice
