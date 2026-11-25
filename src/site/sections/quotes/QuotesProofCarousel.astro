@@ -1,0 +1,176 @@
+---
+// T7 · Jedan po jedan, uz proizvod (T3 × T4) — one customer at a time, each as T4's big panel: topic tag + quote +
+// author on the left, the screen the quote is about on the right (Sokol → Rokovi, Vukelja → Fakture, Animago → Ruta).
+// The logos next to the heading switch it, with a thin timer under the active one. Auto-advances every 9s (paused on
+// hover, stops after a click, off for reduced motion). Panels are stacked in one grid cell, so switching never jumps.
+import { Image } from 'astro:assets';
+import Icon, { type IconName } from '../../ui/Icon.astro';
+import Shot from '../../ui/Shot.astro';
+import AppWindow from '../../mock/AppWindow.astro';
+import Rokovi from '../../mock/Rokovi.astro';
+import Fakture from '../../mock/Fakture.astro';
+import Ruta from '../../mock/Ruta.astro';
+import { getCopy } from '../../locale';
+import { appWords } from '../../mock/words';
+
+const { testimonials, ui, anchors } = getCopy(Astro.url);
+const w = appWords(Astro.url);
+---
+
+<section id={anchors.customers} class="py-24 max-md:py-16" data-qp>
+  <div class="mx-auto max-w-[1200px] px-6">
+    <div class="mb-10 flex flex-wrap items-end justify-between gap-6">
+      <h2 data-reveal class="max-w-xl text-[clamp(1.75rem,1.2rem+2vw,2.5rem)] leading-[1.15]">
+        {ui.quotes.title}
+      </h2>
+      <div class="qp-hover flex gap-3" role="tablist" aria-label={ui.quotes.aria}>
+        {
+          testimonials.map((t, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`qp-tab-${i}`}
+              aria-controls={`qp-panel-${i}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              data-qp-tab={i}
+              aria-label={t.name}
+              class="group relative flex h-14 w-28 items-center justify-center rounded-xl border border-border bg-card p-2.5 transition-colors data-[on]:border-petrol max-sm:w-24"
+            >
+              <Image
+                src={t.logo}
+                alt=""
+                class="max-h-full w-auto object-contain opacity-50 grayscale transition group-hover:opacity-80 group-data-[on]:opacity-100 group-data-[on]:grayscale-0"
+              />
+              <span class="absolute inset-x-3 -bottom-2.5 h-[2px] overflow-hidden rounded-full bg-border opacity-0 group-data-[on]:opacity-100">
+                <span class="qp-timer absolute inset-y-0 left-0 bg-petrol" />
+              </span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="qp-hover grid">
+      {
+        testimonials.map((t, i) => (
+          <div
+            id={`qp-panel-${i}`}
+            role="tabpanel"
+            aria-labelledby={`qp-tab-${i}`}
+            data-qp-item={i}
+            class="invisible grid items-center gap-10 rounded-3xl border border-frame-border bg-frame p-10 opacity-0 transition-opacity duration-500 [grid-area:1/1] data-[on]:visible data-[on]:opacity-100 max-md:p-6 lg:grid-cols-[1fr_1fr]"
+          >
+            <figure>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-white px-2.5 py-1 text-[12.5px] font-medium text-petrol">
+                  <Icon name={t.topic.icon as IconName} size={14} />
+                  {t.topic.label}
+                </span>
+                {ui.quotes.translated && (
+                  <span class="inline-flex items-center rounded-full border border-neutral-200 bg-white/70 px-2.5 py-1 text-[12.5px] font-medium text-foreground/50">
+                    {ui.quotes.translated.replace(/\.$/, '')}
+                  </span>
+                )}
+              </div>
+              <blockquote class="mt-5 font-heading text-[clamp(1.2rem,1rem+0.8vw,1.55rem)] leading-snug font-semibold tracking-tight">
+                {ui.quotes.marks[0]}{t.quote}{ui.quotes.marks[1]}
+              </blockquote>
+              <figcaption class="mt-8 flex items-center gap-4">
+                <span class="flex h-16 w-28 items-center justify-center rounded-xl bg-white p-2">
+                  <Image src={t.logo} alt="" class="max-h-full w-auto object-contain" />
+                </span>
+                <span>
+                  <span class="block text-[18px] font-semibold">{t.name}</span>
+                  <span class="text-[15px] text-muted-foreground">{t.role}</span>
+                </span>
+              </figcaption>
+            </figure>
+            <div class="min-w-0">
+              {i === 0 && (
+                <Shot name="flota-rokovi">
+                  <AppWindow active="flota" crumbs={[w.nav.flota, w.crumbs.deadlines]} bare>
+                    <Rokovi />
+                  </AppWindow>
+                </Shot>
+              )}
+              {i === 1 && (
+                <Shot name="fakture">
+                  <AppWindow active="pocetna" crumbs={[w.nav.pocetna]} bare>
+                    <Fakture />
+                  </AppWindow>
+                </Shot>
+              )}
+              {i === 2 && (
+                <Shot name="ruta-vozila">
+                  <AppWindow active="prijevozi" crumbs={[w.nav.prijevozi, 'ZG 1234-AB']} bare>
+                    <Ruta compact />
+                  </AppWindow>
+                </Shot>
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  [data-qp] [data-on] .qp-timer {
+    animation: qp-fill 9s linear forwards;
+  }
+  /* Count only while the section is on screen (and not hovered). */
+  [data-qp]:not([data-playing]) .qp-timer,
+  [data-qp]:has(.qp-hover:hover) .qp-timer {
+    animation-play-state: paused;
+  }
+  [data-qp][data-manual] .qp-timer {
+    display: none;
+  }
+  @keyframes qp-fill {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .qp-timer {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-qp]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLElement>('[data-qp-tab]')];
+    const items = [...root.querySelectorAll<HTMLElement>('[data-qp-item]')];
+    let active = 0;
+    const show = (i: number) => {
+      active = i;
+      tabs.forEach((t, j) => {
+        t.toggleAttribute('data-on', j === i);
+        t.setAttribute('aria-selected', String(j === i));
+      });
+      items.forEach((el, j) => el.toggleAttribute('data-on', j === i));
+    };
+    tabs.forEach((t, i) =>
+      t.addEventListener('click', () => {
+        root.setAttribute('data-manual', '');
+        show(i);
+      }),
+    );
+    root.addEventListener('animationend', (e) => {
+      if ((e.target as HTMLElement).classList.contains('qp-timer')) show((active + 1) % tabs.length);
+    });
+    show(0);
+  });
+
+  // Start the timer when the section scrolls into view; pause it again when it leaves.
+  const qpObserver = new IntersectionObserver(
+    (entries) => entries.forEach((e) => e.target.toggleAttribute('data-playing', e.isIntersecting)),
+    { threshold: 0.4 },
+  );
+  document.querySelectorAll('[data-qp]').forEach((el) => qpObserver.observe(el));
+</script>

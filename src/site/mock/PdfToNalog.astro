@@ -1,0 +1,59 @@
+---
+// Nalog form from a draft (lab /nalog-form): info banner with the file, ✦ on fields the AI filled until touched.
+import Icon from '../ui/Icon.astro';
+import { appWords } from './words';
+
+const w = appWords(Astro.url);
+const WIDE = [true, false, false, false, false, true];
+---
+
+<div class="grid gap-4 text-[12.5px] @2xl:grid-cols-[150px_1fr]">
+  <!-- the dropped PDF -->
+  <div class="hidden flex-col items-center gap-2 @2xl:flex">
+    <div class="relative w-full rotate-[-3deg] rounded-lg border border-border bg-card p-3 shadow-md">
+      <div class="mb-2 flex items-center gap-1.5 text-[11px] font-semibold text-red-600">
+        <Icon name="file" size={14} /> PDF
+      </div>
+      <div class="space-y-1.5">
+        <div class="h-1.5 w-3/4 rounded bg-neutral-200"></div>
+        <div class="h-1.5 w-1/2 rounded bg-neutral-200"></div>
+        <div class="h-1.5 w-5/6 rounded bg-neutral-200"></div>
+        <div class="mt-3 h-1.5 w-2/3 rounded bg-neutral-200"></div>
+        <div class="h-1.5 w-3/5 rounded bg-neutral-200"></div>
+        <div class="h-1.5 w-4/5 rounded bg-neutral-200"></div>
+        <div class="mt-3 h-6 rounded bg-neutral-100"></div>
+      </div>
+    </div>
+    <div class="truncate text-[11px] text-muted-foreground">{w.pdf.file}</div>
+    <Icon name="arrow-right" size={18} class="mt-1 rotate-90 text-teal-500 @2xl:rotate-0" />
+  </div>
+
+  <div class="min-w-0">
+    <div class="mb-3 flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-[12px] text-blue-900">
+      <Icon name="sparkles" size={14} class="mt-0.5 text-blue-600" />
+      <span>
+        {w.pdf.banner[0]}<span class="font-medium">{w.pdf.file}</span>{w.pdf.banner[1]}
+      </span>
+    </div>
+    <div class="grid grid-cols-2 gap-x-3 gap-y-2.5">
+      {
+        w.pdf.fields.map((f, i) => (
+          <label class:list={['flex flex-col gap-1', WIDE[i] && 'col-span-2']}>
+            <span class="flex items-center gap-1 text-[11.5px] font-medium">
+              {f.label}
+              <span class="text-blue-600">✦</span>
+            </span>
+            <span class="flex h-9 items-center rounded-lg border border-border bg-card px-2.5 tabular-nums shadow-xs">
+              {f.value}
+            </span>
+          </label>
+        ))
+      }
+    </div>
+    <div class="mt-3 flex items-center gap-2 border-t border-border pt-3">
+      <span class="text-[11.5px] text-muted-foreground">{w.pdf.summary}</span>
+      <span class="ml-auto rounded-lg px-2.5 py-1.5 font-semibold">{w.pdf.cancel}</span>
+      <span class="rounded-lg bg-primary px-3 py-1.5 font-semibold text-primary-foreground">{w.pdf.create}</span>
+    </div>
+  </div>
+</div>

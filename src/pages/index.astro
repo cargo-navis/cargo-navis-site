@@ -1,24 +1,27 @@
 ---
+// Home page (A2 of the 2026-11 redesign). Everything locale-specific resolves from the URL inside the components, so
+// pages/en/index.astro is the same file with deeper imports.
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Hero from '../components/Hero.astro';
-import LogoMarquee from '../components/LogoMarquee.astro';
-import About from '../components/About.astro';
-import Features from '../components/Features.astro';
-import Testimonials from '../components/Testimonials.astro';
-import Cta from '../components/Cta.astro';
-import Footer from '../components/Footer.astro';
+import Hero from '../site/sections/AHero.astro';
+import LogoStrip from '../site/sections/LogoStrip.astro';
+import DaySteps from '../site/sections/DaySteps.astro';
+import MoreDark from '../site/sections/MoreDark.astro';
+import Testimonials from '../site/sections/quotes/QuotesProofCarousel.astro';
+import Faq from '../site/sections/Faq.astro';
+import CtaBooking from '../site/sections/CtaBooking.astro';
+import SiteFooter from '../site/sections/SiteFooter.astro';
+import { homeJsonLd } from '../site/jsonld';
 ---
 
-<Layout path="/">
-  <Navbar />
+<Layout path="/" jsonLd={homeJsonLd(Astro.url)}>
   <Hero />
-  <main class="main-wrapper">
-    <LogoMarquee />
-    <About />
-    <Features />
+  <main>
+    <LogoStrip size="lg" class="border-b border-border pt-16" />
+    <DaySteps phoneLive />
+    <MoreDark />
     <Testimonials />
-    <Cta />
+    <Faq />
+    <CtaBooking />
   </main>
-  <Footer />
+  <SiteFooter />
 </Layout>

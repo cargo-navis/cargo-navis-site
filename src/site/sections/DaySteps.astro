@@ -1,0 +1,106 @@
+---
+// „Jedan dan u Cargo Navisu” (from B): the five steps as a dispatcher's day, a sticky clock on the left marking the
+// step in the middle of the screen; each step = big time, title, one line, one screen, bullets. Used by B and A2.
+import StepShot from './StepShot.astro';
+import Icon from '../ui/Icon.astro';
+import { getCopy } from '../locale';
+import { keepHyphens } from '../text';
+
+interface Props {
+  class?: string;
+  /** Animated 3D phone on the driver step (A2). */
+  phoneLive?: boolean;
+}
+const { class: klass, phoneLive = false } = Astro.props;
+const { steps, ui, anchors } = getCopy(Astro.url);
+---
+
+<section id={anchors.howItWorks} class:list={['py-24 max-md:py-16', klass]}>
+  <div class="mx-auto max-w-[1200px] px-6">
+    <div class="mb-16 max-w-2xl">
+      <h2 data-reveal class="text-[clamp(1.9rem,1.3rem+2.2vw,3rem)] leading-[1.1]">{ui.day.title}</h2>
+      <p data-reveal class="mt-4 text-[17px] text-foreground/70" style="--reveal-delay:60ms">
+        {ui.day.sub}
+      </p>
+    </div>
+
+    <div class="grid gap-16 lg:grid-cols-[220px_1fr]">
+      <nav class="max-lg:hidden" aria-label={ui.day.aria}>
+        <ol class="sticky top-24 flex flex-col gap-1 border-l border-border">
+          {
+            steps.map((s) => (
+              <li>
+                <a
+                  href={`#${s.anchor}`}
+                  data-step-link={s.id}
+                  class="-ml-px flex flex-col border-l-2 border-transparent py-2.5 pl-5 text-muted-foreground transition-colors data-[active]:border-petrol data-[active]:text-foreground"
+                >
+                  <span class="font-mono text-[13px] tabular-nums">{s.time}</span>
+                  <span class="text-[15px] font-medium">{s.kicker}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+
+      <div class="flex flex-col gap-32 max-md:gap-20">
+        {
+          steps.map((s) => (
+            <article id={s.anchor} data-step={s.id} class="scroll-mt-24">
+              <div class="mb-8 grid gap-6 md:grid-cols-[1fr_1fr] md:items-end">
+                <div>
+                  <div class="mb-3 flex items-center gap-3">
+                    <span class="font-mono text-[clamp(2rem,1.6rem+1.4vw,2.75rem)] leading-none font-medium text-petrol tabular-nums">
+                      {s.time}
+                    </span>
+                    <span class="rounded-full border border-border px-2.5 py-0.5 text-[13px] font-medium text-muted-foreground lg:hidden">
+                      {s.kicker}
+                    </span>
+                  </div>
+                  <h3
+                    data-reveal
+                    class="text-[clamp(1.6rem,1.2rem+1.4vw,2.25rem)] leading-[1.15]"
+                    set:html={keepHyphens(s.title)}
+                  />
+                </div>
+                <p data-reveal class="text-[16.5px] text-foreground/70" style="--reveal-delay:60ms">
+                  {s.text}
+                </p>
+              </div>
+              <div data-reveal>
+                <StepShot id={s.id} name={s.shot} phoneLive={phoneLive} />
+              </div>
+              <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[14.5px] text-foreground/80">
+                {s.bullets.map((b) => (
+                  <li class="flex items-center gap-2">
+                    <Icon name="check" size={16} class="text-petrol" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Sticky clock: mark the step whose article is in the middle of the screen.
+  const links = new Map(
+    [...document.querySelectorAll<HTMLElement>('[data-step-link]')].map((a) => [a.dataset.stepLink, a]),
+  );
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        const id = (e.target as HTMLElement).dataset.step;
+        links.forEach((a, key) => a.toggleAttribute('data-active', key === id));
+      }
+    },
+    { rootMargin: '-45% 0px -50% 0px' },
+  );
+  document.querySelectorAll('[data-step]').forEach((el) => io.observe(el));
+</script>

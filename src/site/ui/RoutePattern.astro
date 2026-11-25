@@ -1,0 +1,56 @@
+---
+// The app's login brand-panel pattern (AuthLayout RoutePattern): abstract routes, dashed legs, a dot per utovar /
+// istovar. `flow` makes the dashes drift. Decoration only.
+interface Props {
+  class?: string;
+  flow?: boolean;
+}
+const { class: klass, flow = false } = Astro.props;
+
+const ROUTE_A: [number, number][] = [
+  [60, 380],
+  [160, 300],
+  [250, 330],
+  [330, 220],
+  [420, 260],
+  [520, 150],
+  [600, 190],
+  [700, 90],
+];
+const ROUTE_B: [number, number][] = [
+  [40, 120],
+  [140, 170],
+  [230, 120],
+  [340, 160],
+  [440, 380],
+  [560, 330],
+  [680, 400],
+];
+const toPath = (points: [number, number][]) => points.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ');
+---
+
+<svg aria-hidden="true" class={klass} preserveAspectRatio="xMidYMid slice" viewBox="0 0 760 480">
+  <path
+    d={toPath(ROUTE_A)}
+    fill="none"
+    opacity="0.5"
+    stroke="currentColor"
+    stroke-dasharray="6 8"
+    stroke-width="2"
+    class:list={[flow && 'dash-flow']}
+  />
+  <path
+    d={toPath(ROUTE_B)}
+    fill="none"
+    opacity="0.3"
+    stroke="currentColor"
+    stroke-dasharray="6 8"
+    stroke-width="2"
+    class:list={[flow && 'dash-flow']}
+  />
+  {
+    [...ROUTE_A, ...ROUTE_B].map(([x, y], i) => (
+      <circle cx={x} cy={y} fill="currentColor" opacity={i % 3 === 0 ? 0.9 : 0.5} r={i % 3 === 0 ? 6 : 4} />
+    ))
+  }
+</svg>

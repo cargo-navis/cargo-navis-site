@@ -1,0 +1,46 @@
+---
+// Česta pitanja (A2): white section between the quotes and the booking CTA, so the last doubts are answered right
+// before the demo card (and the two grey panels no longer sit back to back). Left: heading + „Još pitanja?” with the
+// email; right: native <details> accordion (no JS, keyboard and screen-reader friendly), first item open.
+import Icon from '../ui/Icon.astro';
+import { getCopy } from '../locale';
+
+const { faq, EMAIL, anchors } = getCopy(Astro.url);
+---
+
+<section id={anchors.faq} class="py-24 max-md:py-16">
+  <div class="mx-auto grid max-w-[1200px] gap-12 px-6 lg:grid-cols-[0.8fr_1.2fr]">
+    <div>
+      <h2 data-reveal class="text-[clamp(1.75rem,1.2rem+2vw,2.5rem)] leading-[1.15]">{faq.title}</h2>
+      <p data-reveal class="mt-4 max-w-sm text-[16.5px] text-foreground/70" style="--reveal-delay:60ms">{faq.sub}</p>
+      <div data-reveal class="mt-8 flex items-start gap-3" style="--reveal-delay:120ms">
+        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-petrol">
+          <Icon name="mail" size={18} />
+        </span>
+        <div class="text-[15px]">
+          <div class="font-semibold">{faq.more}</div>
+          <div class="text-muted-foreground">
+            {faq.moreText}{" "}
+            <a href={`mailto:${EMAIL}`} class="font-medium text-petrol underline-offset-4 hover:underline">{EMAIL}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal class="border-t border-border" style="--reveal-delay:80ms">
+      {
+        faq.items.map((item, i) => (
+          <details class="group border-b border-border" open={i === 0}>
+            <summary class="flex cursor-pointer list-none items-center gap-4 py-5 text-[17px] font-semibold [&::-webkit-details-marker]:hidden">
+              <span class="flex-1">{item.q}</span>
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full border border-border text-foreground/60 transition-transform duration-200 group-open:rotate-45 group-open:border-petrol group-open:text-petrol">
+                <Icon name="plus" size={16} />
+              </span>
+            </summary>
+            <p class="-mt-1 max-w-2xl pr-12 pb-6 text-[16px] leading-relaxed text-foreground/70">{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,313 @@
+---
+// Aplikacija za vozače, animated (A, A2): a tilted 3D phone and, beside it, the dispatcher's card („Ti, u uredu”).
+// One 14s loop, CSS only:
+//   5 %  dispatcher taps „Obavijesti”          → card: „Obaviješten 13:12”
+//   10 % push notification drops on the phone  → 24 % driver taps it → the utovar card appears
+//   44 % driver taps „Potvrdi utovar”          → „Utovar potvrđen”, toast
+//   53 % dispatcher card: „Potvrdio vozač · 14:02”  … hold, reset at 92–98 %.
+// Base styles are the END state (confirmed), so reduced motion shows the outcome. Plays only while in view.
+import { Image } from 'astro:assets';
+import Icon from '../ui/Icon.astro';
+import logomark from '../../assets/logos/logomark.webp';
+import { appWords } from './words';
+
+const w = appWords(Astro.url);
+---
+
+<div class="dp-scene relative h-[620px] overflow-hidden rounded-2xl bg-frame max-sm:h-[600px]" data-dp-scene>
+  <!-- soft light + floor shadow -->
+  <div class="pointer-events-none absolute top-[-20%] right-[-10%] size-[520px] rounded-full bg-teal-100/70 blur-[90px]"></div>
+  <div class="pointer-events-none absolute bottom-[38px] left-[62%] h-10 w-[230px] -translate-x-1/2 rounded-[50%] bg-teal-950/25 blur-xl max-sm:left-1/2"></div>
+
+  <!-- The phone -->
+  <div class="absolute top-[34px] left-[62%] -translate-x-1/2 [perspective:1400px] max-sm:left-1/2">
+    <div class="dp-phone relative w-[260px] [transform-style:preserve-3d]">
+      <!-- thickness: a back plate a few px behind -->
+      <div class="absolute inset-0 rounded-[2.6rem] bg-neutral-700 [transform:translateZ(-14px)]"></div>
+      <div class="absolute inset-0 rounded-[2.6rem] bg-neutral-800 [transform:translateZ(-7px)]"></div>
+
+      <div class="relative rounded-[2.6rem] border-[7px] border-neutral-900 bg-neutral-900 shadow-[0_40px_80px_-30px_rgb(5_44_51/0.55)]">
+        <div class="relative h-[520px] overflow-hidden rounded-[2.1rem] bg-[#f6f7f7] text-left text-[12.5px] text-foreground">
+          <div class="flex items-center justify-between px-6 pt-3 text-[11px] font-semibold">
+            <span>14:01</span>
+            <span class="h-4 w-16 rounded-full bg-neutral-900"></span>
+            <span>5G</span>
+          </div>
+          <div class="px-4 pt-4 pb-3">
+            <div class="text-[11.5px] text-muted-foreground">{w.phone.date}</div>
+            <div class="font-heading text-[19px] font-bold tracking-tight">{w.phone.hello}</div>
+          </div>
+
+          <!-- Slot for the next utovar: empty state and the card stacked, cross-fading (no layout shift) -->
+          <div class="mx-3 grid">
+            <div
+              class="dp-empty flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-neutral-300 text-center text-muted-foreground [grid-area:1/1]"
+            >
+              <Icon name="truck" size={22} />
+              <span class="text-[12px]">{w.phone.empty}</span>
+            </div>
+
+            <div class="dp-card relative rounded-2xl border border-border bg-white p-3.5 shadow-sm [grid-area:1/1]">
+              <span class="dp-card-ring pointer-events-none absolute -inset-px rounded-2xl ring-2 ring-petrol"></span>
+              <div class="grid">
+                <div class="dp-todo flex items-center gap-2 [grid-area:1/1]">
+                  <span class="text-[10.5px] font-semibold tracking-wide text-utovar uppercase">{w.kind.utovar}</span>
+                  <span class="text-[11.5px] text-muted-foreground">{w.phone.todayAt}</span>
+                </div>
+                <div class="dp-done flex items-center gap-1.5 [grid-area:1/1]">
+                  <span class="text-[10.5px] font-semibold tracking-wide text-muted-foreground uppercase">{w.kind.utovar}</span>
+                  <span class="inline-flex items-center gap-1 text-[11.5px] font-medium text-success">
+                    <Icon name="check" size={12} stroke={3} /> {w.phone.confirmedAt}
+                  </span>
+                </div>
+              </div>
+              <div class="mt-1 font-heading text-[17px] leading-tight font-bold tracking-tight">Rosenheim</div>
+              <div class="text-[12px] text-muted-foreground">Bayern Holz GmbH · Industriestraße 12</div>
+              <div class="mt-2.5 flex flex-wrap gap-1.5 text-[11.5px]">
+                <span class="rounded-full border border-border px-2 py-0.5">{w.phone.cargo}</span>
+                <span class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5">
+                  <Icon name="paperclip" size={11} /> 2
+                </span>
+              </div>
+
+              <div class="dp-press relative mt-3.5 grid">
+                <span
+                  class="dp-todo flex h-12 items-center justify-center gap-2 rounded-xl bg-primary text-[15px] font-semibold text-primary-foreground [grid-area:1/1]"
+                >
+                  <Icon name="check" size={18} /> {w.phone.confirm}
+                </span>
+                <span
+                  class="dp-done flex h-12 items-center justify-center gap-2 rounded-xl border border-green-300 bg-green-50 text-[15px] font-semibold text-green-700 [grid-area:1/1]"
+                >
+                  <Icon name="check" size={18} stroke={2.5} /> {w.phone.confirmed}
+                </span>
+                <span class="dp-tap dp-tap-c absolute top-1/2 left-1/2 -mt-6 -ml-6 size-12 rounded-full bg-neutral-900/30"></span>
+              </div>
+              <span class="mt-2 flex h-11 items-center justify-center gap-2 rounded-xl border border-border text-[14px] font-semibold">
+                <Icon name="camera" size={17} /> {w.phone.addDoc}
+              </span>
+            </div>
+          </div>
+
+          <div class="mx-3 mt-2.5 flex items-center gap-2.5 rounded-2xl border border-border bg-white px-3.5 py-2.5 opacity-80">
+            <span class="text-[10.5px] font-semibold tracking-wide text-istovar uppercase">{w.kind.istovar}</span>
+            <span class="truncate">Ljubljana · 14.11.</span>
+          </div>
+
+          <!-- Toast (driver: bottom-centre above the nav, tinted success) -->
+          <div
+            class="dp-toast absolute inset-x-3 bottom-[70px] flex items-center gap-2 rounded-xl border border-green-300 bg-green-50 px-3 py-2.5 text-[12px] text-green-800 shadow-lg"
+          >
+            <Icon name="check" size={15} stroke={2.5} />
+            <span><span class="font-semibold">{w.phone.toast[0]}</span>{w.phone.toast[1]}</span>
+          </div>
+
+          <div class="absolute inset-x-0 bottom-0 grid grid-cols-3 border-t border-border bg-white px-2 pt-2 pb-5 text-center text-[10.5px]">
+            <span class="flex flex-col items-center gap-0.5 font-semibold text-petrol"><Icon name="route" size={18} />{w.phone.tabs[0]}</span>
+            <span class="flex flex-col items-center gap-0.5 text-muted-foreground"><Icon name="file" size={18} />{w.phone.tabs[1]}</span>
+            <span class="flex flex-col items-center gap-0.5 text-muted-foreground"><Icon name="user" size={18} />{w.phone.tabs[2]}</span>
+          </div>
+
+          <!-- Push notification -->
+          <div class="dp-notif absolute inset-x-2 top-9 z-10">
+            <div class="relative rounded-2xl bg-white/95 p-3 shadow-[0_12px_30px_-8px_rgb(0_0_0/0.35)] ring-1 ring-black/5 backdrop-blur">
+              <div class="flex items-center gap-2 text-[10.5px] text-muted-foreground">
+                <span class="flex size-5 items-center justify-center rounded-md border border-border bg-white">
+                  <Image src={logomark} alt="" class="size-3.5 object-contain" />
+                </span>
+                <span class="font-medium tracking-wide uppercase">Cargo Navis</span>
+                <span class="ml-auto">{w.phone.now}</span>
+              </div>
+              <div class="mt-1.5 text-[12.5px] font-semibold">{w.phone.notifTitle}</div>
+              <div class="text-[12px] text-foreground/70">{w.phone.notifBody}</div>
+              <span class="dp-tap dp-tap-b absolute top-1/2 left-1/2 -mt-6 -ml-6 size-12 rounded-full bg-neutral-900/25"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The dispatcher's side: „Ti, u uredu” -->
+  <div class="absolute bottom-[56px] left-[5%] w-[270px] max-sm:right-3 max-sm:bottom-3 max-sm:left-3 max-sm:w-auto">
+    <div class="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-1 text-[12px] font-medium text-petrol shadow-xs">
+      <Icon name="building" size={13} /> {w.phone.office}
+    </div>
+    <div class="relative rounded-xl border border-border bg-card p-3.5 text-[12.5px] shadow-[0_20px_50px_-20px_rgb(5_44_51/0.4)]">
+      <span class="dp-dcard-ring pointer-events-none absolute -inset-px rounded-xl ring-2 ring-green-500"></span>
+      <div class="mb-2 flex items-center gap-2 text-[11px] text-muted-foreground">
+        <span class="font-mono">ZG 1234-AB</span>
+        <span>·</span>
+        <span>#2058/2026</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-[10.5px] font-semibold tracking-wide text-utovar uppercase">{w.kind.utovar}</span>
+        <span class="text-[11.5px] text-muted-foreground">{w.phone.todayAt}</span>
+      </div>
+      <div class="mt-0.5 font-medium">Rosenheim <span class="font-normal text-muted-foreground">· Bayern Holz GmbH</span></div>
+
+      <!-- status: three states stacked -->
+      <div class="mt-3 grid border-t border-border pt-3">
+        <div class="dp-s1 flex items-center gap-2 [grid-area:1/1]">
+          <span class="flex items-center gap-1 text-[12px] text-warning"><Icon name="bell" size={13} /> {w.phone.notNotified}</span>
+          <span class="relative ml-auto rounded-md bg-primary px-2.5 py-1 text-[11.5px] font-semibold text-primary-foreground">
+            {w.phone.notify}
+            <span class="dp-tap dp-tap-a absolute top-1/2 left-1/2 -mt-5 -ml-5 size-10 rounded-full bg-neutral-900/30"></span>
+          </span>
+        </div>
+        <div class="dp-s2 flex items-center gap-1.5 text-[12px] text-muted-foreground [grid-area:1/1]">
+          <Icon name="check" size={13} /> {w.phone.notified}
+        </div>
+        <div class="dp-s3 flex items-center gap-2 [grid-area:1/1]">
+          <span class="flex size-5 items-center justify-center rounded-full bg-green-100 text-green-700">
+            <Icon name="check" size={12} stroke={3} />
+          </span>
+          <span class="text-[12px] font-medium text-green-700">{w.phone.confirmedBy}</span>
+          <span class="ml-auto flex size-6 items-center justify-center rounded-full bg-driver-1-soft text-[10px] font-semibold text-driver-1-ink">
+            IH
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  /* Fixed tilt; the phone itself stays still, only its screen animates. */
+  .dp-phone {
+    transform: rotateY(-22deg) rotateX(9deg) rotateZ(2deg);
+  }
+
+  /* End state by default (reduced motion shows the outcome). */
+  .dp-notif {
+    opacity: 0;
+    transform: translateY(-140%);
+  }
+  .dp-tap,
+  .dp-empty,
+  .dp-todo,
+  .dp-toast,
+  .dp-card-ring,
+  .dp-dcard-ring,
+  .dp-s1,
+  .dp-s2 {
+    opacity: 0;
+  }
+  .dp-toast {
+    transform: translateY(12px);
+  }
+
+  .dp-scene .dp-notif { animation: dp-notif 14s infinite; }
+  .dp-scene .dp-tap-a { animation: dp-tap-a 14s infinite; }
+  .dp-scene .dp-tap-b { animation: dp-tap-b 14s infinite; }
+  .dp-scene .dp-tap-c { animation: dp-tap-c 14s infinite; }
+  .dp-scene .dp-empty { animation: dp-empty 14s infinite; }
+  .dp-scene .dp-card { animation: dp-card 14s infinite; }
+  .dp-scene .dp-card-ring { animation: dp-card-ring 14s infinite; }
+  .dp-scene .dp-press { animation: dp-press 14s infinite; }
+  .dp-scene .dp-todo { animation: dp-todo 14s infinite; }
+  .dp-scene .dp-done { animation: dp-done 14s infinite; }
+  .dp-scene .dp-toast { animation: dp-toast 14s infinite; }
+  .dp-scene .dp-s1 { animation: dp-s1 14s infinite; }
+  .dp-scene .dp-s2 { animation: dp-s2 14s infinite; }
+  .dp-scene .dp-s3 { animation: dp-s3 14s infinite; }
+  .dp-scene .dp-dcard-ring { animation: dp-dcard-ring 14s infinite; }
+
+  /* Wait at the first frame until the scene is on screen. */
+  .dp-scene:not(.is-playing) * {
+    animation-play-state: paused !important;
+  }
+
+  @keyframes dp-tap-a {
+    0%, 3.5% { opacity: 0; transform: scale(0.4); }
+    5% { opacity: 0.6; transform: scale(0.8); }
+    8%, 100% { opacity: 0; transform: scale(1.8); }
+  }
+  @keyframes dp-tap-b {
+    0%, 22.5% { opacity: 0; transform: scale(0.4); }
+    24% { opacity: 0.6; transform: scale(0.8); }
+    27%, 100% { opacity: 0; transform: scale(1.8); }
+  }
+  @keyframes dp-tap-c {
+    0%, 42.5% { opacity: 0; transform: scale(0.4); }
+    44% { opacity: 0.6; transform: scale(0.8); }
+    47%, 100% { opacity: 0; transform: scale(1.8); }
+  }
+  @keyframes dp-s1 {
+    0%, 6% { opacity: 1; }
+    7.5%, 96% { opacity: 0; }
+    98%, 100% { opacity: 1; }
+  }
+  @keyframes dp-s2 {
+    0%, 6% { opacity: 0; }
+    7.5%, 51% { opacity: 1; }
+    53%, 100% { opacity: 0; }
+  }
+  @keyframes dp-s3 {
+    0%, 51% { opacity: 0; }
+    53%, 96% { opacity: 1; }
+    98%, 100% { opacity: 0; }
+  }
+  @keyframes dp-dcard-ring {
+    0%, 52% { opacity: 0; }
+    54% { opacity: 1; }
+    64%, 100% { opacity: 0; }
+  }
+  @keyframes dp-notif {
+    0%, 9% { opacity: 0; transform: translateY(-140%); animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+    12.5% { opacity: 1; transform: translateY(0); }
+    24% { opacity: 1; transform: translateY(0) scale(1); }
+    25% { opacity: 1; transform: translateY(0) scale(0.97); }
+    28%, 100% { opacity: 0; transform: translateY(-140%); }
+  }
+  @keyframes dp-empty {
+    0%, 26% { opacity: 1; }
+    29%, 92% { opacity: 0; }
+    96%, 100% { opacity: 1; }
+  }
+  @keyframes dp-card {
+    0%, 26% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+    31% { opacity: 1; transform: translateY(0) scale(1.01); }
+    33%, 92% { opacity: 1; transform: none; }
+    96%, 100% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+  }
+  @keyframes dp-card-ring {
+    0%, 29% { opacity: 0; }
+    31%, 38% { opacity: 1; }
+    42%, 100% { opacity: 0; }
+  }
+  @keyframes dp-press {
+    0%, 43.5% { transform: none; }
+    45% { transform: scale(0.95); }
+    47%, 100% { transform: none; }
+  }
+  @keyframes dp-todo {
+    0%, 46% { opacity: 1; }
+    48%, 100% { opacity: 0; }
+  }
+  @keyframes dp-done {
+    0%, 46% { opacity: 0; }
+    48%, 100% { opacity: 1; }
+  }
+  @keyframes dp-toast {
+    0%, 48% { opacity: 0; transform: translateY(12px); }
+    51%, 64% { opacity: 1; transform: none; }
+    67%, 100% { opacity: 0; transform: translateY(12px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dp-scene *,
+    .dp-phone {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  // Play only while the scene is on screen (it starts from the first frame the first time it's seen).
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach((e) => e.target.classList.toggle('is-playing', e.isIntersecting)),
+    { threshold: 0.35 },
+  );
+  document.querySelectorAll('[data-dp-scene]').forEach((el) => io.observe(el));
+</script>

@@ -1,0 +1,40 @@
+---
+import Logo from '../ui/Logo.astro';
+import { getCopy } from '../locale';
+
+interface Props {
+  tone?: 'light' | 'dark';
+}
+const { tone = 'light' } = Astro.props;
+const { footer, nav, ui, EMAIL, DEMO_HREF, LOGIN_HREF } = getCopy(Astro.url);
+const dark = tone === 'dark';
+const muted = dark ? 'text-white/60' : 'text-muted-foreground';
+const link = dark ? 'text-white/80 hover:text-white' : 'text-foreground/75 hover:text-foreground';
+---
+
+<footer class:list={['pt-16 pb-24', dark ? 'bg-teal-950 text-white' : 'border-t border-border']}>
+  <div class="mx-auto grid max-w-[1200px] gap-10 px-6 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div>
+      <Logo inverted={dark} />
+      <p class:list={['mt-4 max-w-xs text-[14.5px]', muted]}>{footer.tagline}</p>
+    </div>
+    <div class="flex flex-col gap-2.5 text-[14.5px]">
+      <span class:list={['mb-1 text-[13px] font-semibold', muted]}>{ui.footer.product}</span>
+      {nav.map((l) => <a href={l.href} class={link}>{l.label}</a>)}
+    </div>
+    <div class="flex flex-col gap-2.5 text-[14.5px]">
+      <span class:list={['mb-1 text-[13px] font-semibold', muted]}>{ui.footer.users}</span>
+      <a href={LOGIN_HREF} class={link}>{ui.footer.login}</a>
+      <a href={DEMO_HREF} class={link}>{ui.footer.demo}</a>
+      <a href={ui.footer.privacyHref} class={link}>{ui.footer.privacy}</a>
+    </div>
+    <div class="flex flex-col gap-2.5 text-[14.5px]">
+      <span class:list={['mb-1 text-[13px] font-semibold', muted]}>{ui.footer.contact}</span>
+      <a href={`mailto:${EMAIL}`} class={link}>{EMAIL}</a>
+      <span class={muted}>{footer.address.map((l) => <>{l}<br /></>)}</span>
+    </div>
+  </div>
+  <div class:list={['mx-auto mt-12 max-w-[1200px] px-6 text-[13px]', muted]}>
+    © {new Date().getFullYear()} Cargo Navis d.o.o. {ui.footer.rights}
+  </div>
+</footer>

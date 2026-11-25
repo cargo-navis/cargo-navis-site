@@ -3,6 +3,10 @@ import '../styles/global.css';
 import { SITE, META, LEGAL } from '../consts';
 import { getLocale, stripLocale } from '../i18n/utils';
 import { defaultLocale, locales } from '../i18n/ui';
+// Heading font (Sora 700) for the LCP <h1>: preloaded so it does not wait for the CSS to be parsed. Same files the
+// @fontsource CSS in global.css references, so Vite emits one hashed copy. latin-ext carries č ć š ž đ.
+import soraLatin from '@fontsource/sora/files/sora-latin-700-normal.woff2?url';
+import soraLatinExt from '@fontsource/sora/files/sora-latin-ext-700-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -11,11 +15,14 @@ interface Props {
   path?: string;
   ogImage?: string;
   noindex?: boolean;
+  /** Extra JSON-LD objects for this page (the Organization one is always emitted). */
+  jsonLd?: Record<string, unknown>[];
 }
 
 const locale = getLocale(Astro.url);
 const meta = META[locale];
-const { title = meta.title, description = meta.description, path, ogImage, noindex = false } = Astro.props;
+const { title = meta.title, description = meta.description, path, ogImage, noindex = false, jsonLd = [] } = Astro.props;
+const fontPreloads = locale === 'hr' ? [soraLatin, soraLatinExt] : [soraLatin];
 
 // Derive the locale-agnostic path from the current URL when not passed explicitly.
 const rawPath = path ?? stripLocale(Astro.url.pathname);
@@ -89,16 +96,10 @@ const orgJsonLd = {
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" href="/android-chrome-512x512.png" />
 
-    {/* Preload primary font weight */}
-    <link
-      rel="preload"
-      href="/fonts/dmsans-regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+    {fontPreloads.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
 
     <script type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
+    {jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
   </head>
   <body>
     <slot />

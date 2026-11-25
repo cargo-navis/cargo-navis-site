@@ -1,0 +1,53 @@
+---
+// Početna tiles (lab /home) for invoices + the invoice status on nalozi; agency margin pill.
+import Badge from '../ui/Badge.astro';
+import { appWords } from './words';
+
+const w = appWords(Astro.url);
+const ROWS = [
+  { client: 'Kvarner Logistika', no: '#2057', status: 'nefakturiran' },
+  { client: 'Alpe Trade GmbH', no: '#2056', status: 'fakturiran' },
+  { client: 'Mura Trans d.o.o.', no: '#2031', status: 'kasni' },
+  { client: 'Sava Steel d.o.o.', no: '#2051', status: 'placen' },
+].map((r, i) => ({ ...r, ...w.fakture.rows[i] }));
+---
+
+<div class="text-[12.5px]">
+  <div class="mb-3 grid grid-cols-2 gap-2">
+    <div class="rounded-lg border border-border p-2.5">
+      <div class="text-[11px] text-muted-foreground">{w.fakture.uninvoiced}</div>
+      <div class="font-heading text-[17px] font-bold tracking-tight tabular-nums">{w.fakture.uninvoicedValue}</div>
+    </div>
+    <div class="rounded-lg border border-red-200 bg-red-50/60 p-2.5">
+      <div class="text-[11px] text-red-700">{w.fakture.overdue}</div>
+      <div class="font-heading text-[17px] font-bold tracking-tight text-red-800 tabular-nums">{w.fakture.overdueValue}</div>
+    </div>
+  </div>
+  <div class="flex flex-col divide-y divide-border rounded-lg border border-border">
+    {
+      ROWS.map((r) => (
+        <div class="flex items-center gap-2 px-2.5 py-2">
+          <div class="min-w-0 flex-1">
+            <div class="truncate font-medium">{r.client}</div>
+            <div class="text-[11px] text-muted-foreground tabular-nums">
+              {r.no}
+              {r.due && ` · ${r.due}`}
+            </div>
+          </div>
+          {r.status === 'nefakturiran' && <Badge tone="warning">{w.invoice.not}</Badge>}
+          {r.status === 'fakturiran' && <Badge tone="info">{w.invoice.invoiced}</Badge>}
+          {r.status === 'kasni' && <Badge tone="danger">{w.invoice.late}</Badge>}
+          {r.status === 'placen' && (
+            <Badge tone="success" icon="check">
+              {w.invoice.paid}
+            </Badge>
+          )}
+          <div class="w-[84px] text-right">
+            <div class="font-medium tabular-nums">{r.price}</div>
+            {'margin' in r && r.margin && <div class="text-[10.5px] font-medium text-success tabular-nums">{r.margin}</div>}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
