@@ -31,6 +31,16 @@ export const recipients: Recipient[] = [
     },
   },
 
+  {
+    scope: 'web',
+    name: 'PostHog Inc. (PostHog EU Cloud)',
+    location: { hr: 'Njemačka (EU)', en: 'Germany (EU)' },
+    purpose: {
+      hr: 'Analitika posjećenosti web-stranice bez kolačića - pregledane stranice i vrijeme zadržavanja, izvor posjeta, vrsta uređaja i preglednika te približna lokacija iz IP adrese, bez snimanja sesija.',
+      en: 'Cookieless website visitor analytics - pages viewed and time on page, referral source, device and browser type, and approximate location from the IP address, without session recording.',
+    },
+  },
+
   // --- Application -----------------------------------------------------------
   {
     scope: 'app',

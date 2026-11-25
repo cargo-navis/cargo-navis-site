@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/cn-relay/static/:path*", "destination": "https://eu-assets.i.posthog.com/static/:path*" },
+    { "source": "/cn-relay/:path*", "destination": "https://eu.i.posthog.com/:path*" }
+  ]
+}

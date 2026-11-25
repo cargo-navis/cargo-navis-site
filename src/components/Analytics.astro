@@ -1,0 +1,45 @@
+---
+// Web analytics only: PostHog EU Cloud, its own project (not the app's). Off without PUBLIC_POSTHOG_KEY (local,
+// previews), so nothing on the site may depend on it.
+//
+// Sends `$pageview` and `$pageleave` and nothing else, which is all the Web analytics dashboard needs (visitors,
+// sessions, bounce rate, sources, pages). No clicks, heatmaps, errors, performance, replay, surveys or flags.
+//
+// Cookieless: `cookieless_mode: 'always'` stores nothing in the browser (no cookie, no localStorage); PostHog counts
+// visitors from a daily-rotating server-side hash instead, so no consent banner is needed. Needs "Cookieless server
+// hash mode" enabled in the project settings, or PostHog drops these events. Privacy policy 4.1, 4.4–4.6 say so; keep
+// them in sync.
+---
+
+<script>
+  const KEY = import.meta.env.PUBLIC_POSTHOG_KEY;
+
+  if (KEY) {
+    // Slim build: no autocapture, replay, surveys or flags code. Each page is a full load (no client-side routing), so
+    // its initial pageview is the only one there is. Loaded on demand so the SDK never delays the page.
+    import('posthog-js/dist/module.slim').then(({ default: posthog }) => {
+      posthog.init(KEY, {
+        // Proxied through our domain (vercel.json rewrites), so ad blockers don't drop it.
+        api_host: '/cn-relay',
+        ui_host: 'https://eu.posthog.com',
+        defaults: '2025-11-30',
+        cookieless_mode: 'always',
+        person_profiles: 'identified_only',
+        // No remote config: nothing switched on from the PostHog UI can start collecting more than this.
+        advanced_disable_flags: true,
+        disable_external_dependency_loading: true,
+        autocapture: false,
+        rageclick: false,
+        capture_dead_clicks: false,
+        capture_heatmaps: false,
+        capture_exceptions: false,
+        capture_performance: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        disable_product_tours: true,
+        disable_conversations: true,
+        disable_web_experiments: true,
+      });
+    });
+  }
+</script>

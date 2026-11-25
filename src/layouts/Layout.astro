@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { SITE, META, LEGAL } from '../consts';
 import { getLocale, stripLocale } from '../i18n/utils';
 import { defaultLocale, locales } from '../i18n/ui';
+import Analytics from '../components/Analytics.astro';
 // Heading font (Sora 700) for the LCP <h1>: preloaded so it does not wait for the CSS to be parsed. Same files the
 // @fontsource CSS in global.css references, so Vite emits one hashed copy. latin-ext carries č ć š ž đ.
 import soraLatin from '@fontsource/sora/files/sora-latin-700-normal.woff2?url';
@@ -122,5 +123,6 @@ const orgJsonLd = {
         els.forEach((el) => io.observe(el));
       }
     </script>
+    <Analytics />
   </body>
 </html>
