@@ -1,0 +1,149 @@
+---
+// Dogovori demo page body (pages/demo.astro, pages/en/demo.astro): what the demo covers (a short ruta) on the left,
+// the Google Calendar booking in an app-style frame on the right (sticky on desktop), a fallback by email, then proof.
+import SiteNav from './SiteNav.astro';
+import LogoStrip from './LogoStrip.astro';
+import SiteFooter from './SiteFooter.astro';
+import Button from '../ui/Button.astro';
+import Icon, { type IconName } from '../ui/Icon.astro';
+import { Image } from 'astro:assets';
+import { BOOKING_SCHEDULE_URL } from '../../consts';
+import { getCopy } from '../locale';
+
+const { testimonials, stats, ui, demo, EMAIL } = getCopy(Astro.url);
+const FACT_ICONS: IconName[] = ['clock', 'phone', 'check'];
+const FACTS = demo.facts.map((text, i) => ({ icon: FACT_ICONS[i], text }));
+const KINDS = ['utovar', 'brand', 'istovar'] as const;
+const AGENDA = demo.agenda.map((a, i) => ({ ...a, kind: KINDS[i] }));
+const quote = testimonials[1];
+---
+
+  <SiteNav />
+
+  <main>
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute -top-48 -left-40 size-[620px] rounded-full bg-teal-100/50 blur-[120px]"></div>
+    <div class="relative mx-auto grid max-w-[1200px] items-start gap-14 px-6 pt-14 pb-24 lg:grid-cols-[0.9fr_1.1fr] max-md:pb-16">
+      <!-- Left: what you get -->
+      <div>
+        <p data-reveal class="mb-5 inline-flex items-center gap-2 text-[14px] font-semibold text-petrol">
+          <Icon name="calendar" size={16} /> {demo.eyebrow}
+        </p>
+        <h1 data-reveal class="text-[clamp(2.4rem,1.6rem+3.2vw,4rem)] leading-[1.05]" style="--reveal-delay:60ms">
+          {demo.title}
+        </h1>
+        <p data-reveal class="mt-5 max-w-lg text-[18px] text-foreground/70" style="--reveal-delay:120ms">
+          {demo.sub}
+        </p>
+        <ul data-reveal class="mt-6 flex flex-wrap gap-2" style="--reveal-delay:160ms">
+          {
+            FACTS.map((f) => (
+              <li class="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[14px]">
+                <Icon name={f.icon} size={15} class="text-petrol" />
+                {f.text}
+              </li>
+            ))
+          }
+        </ul>
+
+        <!-- What the 30 minutes cover, drawn as a short ruta -->
+        <h2 data-reveal class="mt-14 mb-6 text-[20px]">{demo.agendaTitle}</h2>
+        <ol class="relative ml-3">
+          {
+            AGENDA.map((a, i) => (
+              <li data-reveal class="relative pb-8 pl-8 last:pb-0" style={`--reveal-delay:${i * 80}ms`}>
+                {/* dashed leg to the next stop: from this circle's centre to the next one's, never above the first or below the last */}
+                {i < AGENDA.length - 1 && (
+                  <span class="absolute top-3.5 -left-[2px] h-full border-l-2 border-dashed border-neutral-300" aria-hidden="true" />
+                )}
+                <span
+                  class:list={[
+                    'absolute top-0.5 -left-[13px] flex size-6 items-center justify-center rounded-full border-[3px] bg-background text-[11px] font-bold',
+                    a.kind === 'utovar' && 'border-utovar-dot text-utovar',
+                    a.kind === 'brand' && 'border-petrol text-petrol',
+                    a.kind === 'istovar' && 'border-istovar-dot text-istovar',
+                  ]}
+                >
+                  {i + 1}
+                </span>
+                <h3 class="text-[18px]">{a.title}</h3>
+                <p class="mt-1.5 max-w-md text-[15.5px] text-foreground/70">{a.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+
+        <!-- No slot works -->
+        <div data-reveal class="mt-12 flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-muted/50 p-5">
+          <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-card text-petrol shadow-xs">
+            <Icon name="mail" size={20} />
+          </span>
+          <div class="min-w-0 flex-1">
+            <div class="font-semibold">{demo.noSlot.title}</div>
+            <p class="text-[14.5px] text-muted-foreground">{demo.noSlot.text}</p>
+          </div>
+          <Button href={`mailto:${EMAIL}`} variant="outline" size="md">{EMAIL}</Button>
+        </div>
+      </div>
+
+      <!-- Right: the booking calendar in the app frame -->
+      <div data-reveal style="--reveal-delay:120ms" class="lg:sticky lg:top-6">
+        <div class="rounded-2xl border border-frame-border bg-frame p-2 shadow-[0_30px_80px_-30px_rgb(11_85_96/0.35)]">
+          <div class="overflow-hidden rounded-xl border border-frame-border bg-card">
+            <div class="flex items-center gap-3 border-b border-border px-5 py-4">
+              <span class="flex size-9 items-center justify-center rounded-lg bg-brand-soft text-petrol">
+                <Icon name="calendar" size={18} />
+              </span>
+              <div>
+                <div class="font-heading text-[16px] font-bold tracking-tight">{demo.calendar.title}</div>
+                <div class="text-[13px] text-muted-foreground">{demo.calendar.sub}</div>
+              </div>
+            </div>
+            <iframe
+              src={BOOKING_SCHEDULE_URL}
+              title={demo.calendar.iframe}
+              loading="lazy"
+              width="100%"
+              height="660"
+              style="border:0"
+              class="block w-full"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proof -->
+  <section class="border-t border-border bg-frame">
+    <div class="mx-auto grid max-w-[1200px] items-center gap-10 px-6 py-16 md:grid-cols-[1.3fr_1fr]">
+      <figure data-reveal>
+        <blockquote class="font-heading text-[clamp(1.3rem,1.05rem+1vw,1.8rem)] leading-snug font-semibold tracking-tight">
+          {ui.quotes.marks[0]}{quote.quote}{ui.quotes.marks[1]}
+        </blockquote>
+        <figcaption class="mt-6 flex items-center gap-3">
+          <span class="flex h-11 w-20 items-center justify-center rounded-lg bg-white p-1.5">
+            <Image src={quote.logo} alt="" class="max-h-full w-auto object-contain" />
+          </span>
+          <span>
+            <span class="block font-semibold">{quote.name}</span>
+            <span class="text-[13.5px] text-muted-foreground">{quote.role}</span>
+          </span>
+        </figcaption>
+        {ui.quotes.translated && <p class="mt-4 text-[13.5px] text-muted-foreground">{ui.quotes.translated}</p>}
+      </figure>
+      <div data-reveal class="grid grid-cols-2 gap-6" style="--reveal-delay:80ms">
+        <div>
+          <div class="font-heading text-[40px] font-bold tracking-tight text-petrol">{stats[0].value}</div>
+          <div class="text-[15px] text-muted-foreground">{demo.statLabels[0]}</div>
+        </div>
+        <div>
+          <div class="font-heading text-[40px] font-bold tracking-tight text-petrol">{stats[2].value}</div>
+          <div class="text-[15px] text-muted-foreground">{demo.statLabels[1]}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <LogoStrip label={demo.logoLabel} />
+  </main>
+  <SiteFooter />

@@ -1,0 +1,33 @@
+---
+// Isprave i rokovi (labs /employees, /fleet): relative expiry, warnings 30 days ahead, colour always with words.
+import Icon from '../ui/Icon.astro';
+import Badge from '../ui/Badge.astro';
+import { appWords } from './words';
+
+const w = appWords(Astro.url);
+const ROWS = [
+  { icon: 'truck', who: 'ZG 1234-AB', tone: 'warning', mono: true },
+  { icon: 'user', who: 'Ivan Horvat', tone: 'danger', mono: false },
+  { icon: 'truck', who: 'ST 456-CD', tone: 'warning', mono: true },
+  { icon: 'user', who: 'Ana Perić', tone: 'success', mono: false },
+] as const;
+---
+
+<div class="flex flex-col divide-y divide-border text-[12.5px]">
+  {
+    ROWS.map((r, i) => (
+      <div class="flex items-center gap-2.5 py-2 first:pt-0 last:pb-0">
+        <span class="flex size-7 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
+          <Icon name={r.icon} size={14} />
+        </span>
+        <div class="min-w-0 flex-1">
+          <div class:list={['truncate font-medium', r.mono && 'font-mono text-[12px]']}>{r.who}</div>
+          <div class="text-[11px] text-muted-foreground">{w.rokovi.what[i]}</div>
+        </div>
+        <Badge tone={r.tone} icon={r.tone === 'success' ? 'check' : r.tone === 'danger' ? 'alert' : 'clock'}>
+          {w.rokovi.badge[i]}
+        </Badge>
+      </div>
+    ))
+  }
+</div>

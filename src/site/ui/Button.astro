@@ -1,0 +1,42 @@
+---
+// The app's Button (KAN-55): primary petrol, outline next to it, ghost for quiet actions; font-semibold; rounded-lg.
+// Marketing adds `inverse` (white on petrol) and `inverse-outline` for dark brand surfaces.
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  href: string;
+  variant?: 'primary' | 'outline' | 'ghost' | 'inverse' | 'inverse-outline';
+  size?: 'sm' | 'md' | 'lg';
+  icon?: IconName;
+  iconEnd?: IconName;
+  target?: string;
+  class?: string;
+}
+const { href, variant = 'primary', size = 'lg', icon, iconEnd, target, class: klass } = Astro.props;
+
+const VARIANT = {
+  primary: 'bg-primary text-primary-foreground hover:bg-primary/85',
+  outline: 'border-border bg-background hover:bg-muted',
+  ghost: 'hover:bg-muted',
+  inverse: 'bg-white text-petrol hover:bg-white/90',
+  'inverse-outline': 'border-white/30 text-white hover:bg-white/10',
+};
+const SIZE = { sm: 'h-8 gap-1.5 px-3 text-[13px]', md: 'h-10 gap-2 px-4 text-sm', lg: 'h-12 gap-2 px-5 text-[15px]' };
+const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
+---
+
+<a
+  href={href}
+  target={target}
+  rel={rel}
+  class:list={[
+    'inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent font-semibold whitespace-nowrap transition-colors',
+    VARIANT[variant],
+    SIZE[size],
+    klass,
+  ]}
+>
+  {icon && <Icon name={icon} size={size === 'sm' ? 14 : 18} />}
+  <slot />
+  {iconEnd && <Icon name={iconEnd} size={size === 'sm' ? 14 : 18} />}
+</a>

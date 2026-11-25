@@ -15,7 +15,7 @@ export const LEGAL = {
   addressLines: ['Županjska ulica 21', '10000 Zagreb', 'Hrvatska / Croatia'],
   privacyEmail: SITE.contactEmail,
   // Keep in sync with the "last updated" line rendered on the policy pages.
-  privacyUpdated: '2026-09-08',
+  privacyUpdated: '2026-11-25',
 } as const;
 
 // Google Calendar appointment schedule powering /demo.
@@ -28,20 +28,16 @@ export const BOOKING_SCHEDULE_URL =
 export const DEMO_PATH = '/demo';
 export const PRIVACY_PATH = '/privacy-policy';
 
-// Kept for the footer/contact mailto links. Primary CTAs now point at /demo.
-export const INQUIRY_MAILTO = `mailto:${SITE.contactEmail}`;
-export const LOGIN_URL = SITE.loginUrl;
-
-// Per-locale page metadata. hr copied 1:1 from current site (SEO parity).
+// Per-locale home page metadata (2026-11 redesign copy: informal „ti”, app words).
 export const META: Record<Locale, { title: string; description: string }> = {
   hr: {
-    title: 'Cargo Navis - Digitalizirajte svoje poslovanje u prijevozu tereta',
+    title: 'Softver za prijevoznike: nalozi, vozila i vozači - Cargo Navis',
     description:
-      'Jedinstven sustav za upravljanje nalozima tereta i flotom. Pratite naloge u stvarnom vremenu, upravljajte vozilima i dokumentacijom te pojednostavite logistiku uz pametna upozorenja i intuitivne alate.',
+      'Nalog iz PDF-a za minutu, ruta svakog vozila na jednom ekranu, a vozači potvrđuju utovar i istovar u aplikaciji. Cargo Navis je softver za prijevoznike.',
   },
   en: {
-    title: 'Cargo Navis - Digitalize your freight transport business',
+    title: 'TMS software: shipments, vehicles, drivers - Cargo Navis',
     description:
-      'A unified system for managing freight orders and fleet. Track orders in real time, manage vehicles and documentation, and simplify logistics with smart alerts and intuitive tools.',
+      'A shipment from a PDF in a minute, every vehicle’s route on one screen, and drivers confirm loading and unloading in the app. Cargo Navis is TMS software for transport companies.',
   },
 };

@@ -1,0 +1,31 @@
+---
+// Closing CTA (from B): frame panel, copy left, booking card right. Used by A, A2, A3, B.
+import Button from '../ui/Button.astro';
+import Icon, { type IconName } from '../ui/Icon.astro';
+import { getCopy } from '../locale';
+
+const { cta, ui, DEMO_HREF, LOGIN_HREF, anchors } = getCopy(Astro.url);
+const FACT_ICONS: IconName[] = ['clock', 'calendar', 'check'];
+---
+
+<section id={anchors.contact} class="px-6 pb-24">
+  <div class="mx-auto grid max-w-[1200px] items-center gap-10 rounded-3xl border border-frame-border bg-frame p-12 max-md:p-7 md:grid-cols-[1.2fr_1fr]">
+    <div>
+      <h2 data-reveal class="text-[clamp(1.9rem,1.3rem+2.2vw,3rem)] leading-[1.1]">{cta.title}</h2>
+      <p data-reveal class="mt-4 text-[17px] text-foreground/70" style="--reveal-delay:60ms">{cta.text}</p>
+    </div>
+    <div data-reveal class="rounded-2xl border border-frame-border bg-card p-6" style="--reveal-delay:120ms">
+      <ul class="flex flex-col gap-3 text-[15px]">
+        {
+          ui.ctaCard.facts.map((f, i) => (
+            <li class="flex items-center gap-3">
+              <Icon name={FACT_ICONS[i]} class="text-petrol" /> {f}
+            </li>
+          ))
+        }
+      </ul>
+      <Button href={DEMO_HREF} class="mt-6 w-full" iconEnd="arrow-right">{ui.ctaCard.primary}</Button>
+      <Button href={LOGIN_HREF} variant="ghost" size="md" class="mt-2 w-full" target="_blank">{ui.ctaCard.login}</Button>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,291 @@
+---
+// Nalozi list (lab /tables): Nalog · Utovar / Istovar track · Teret · Vozilo / Vozač · Status fakture · Cijena.
+// Lives inside AppWindow (its @container decides which columns fit).
+import Icon from '../ui/Icon.astro';
+import Badge from '../ui/Badge.astro';
+import { appWords } from './words';
+
+interface Props {
+  rows?: number;
+}
+const { rows = 5 } = Astro.props;
+const w = appWords(Astro.url);
+
+type Row = {
+  client: string;
+  no: string;
+  agency?: boolean;
+  files?: number;
+  from: string;
+  fromDate: string;
+  to: string;
+  toDate: string;
+  progress: 0 | 1 | 2;
+  cargo: string;
+  cargoSub: string;
+  vehicle?: string;
+  driver?: string;
+  driverTone?: 1 | 2 | 3 | 4;
+  contractor?: string;
+  invoice: 'nefakturiran' | 'fakturiran' | 'placen';
+  due?: string;
+  price: string;
+  margin?: string;
+};
+
+const ROWS: Row[] = [
+  {
+    client: 'Kvarner Logistika d.o.o.',
+    no: '#2057/2026',
+    files: 2,
+    from: '🇭🇷 10000',
+    fromDate: '10.11.',
+    to: '🇩🇪 80939',
+    toDate: '12.11.',
+    progress: 1,
+    cargo: '13,6 LDM',
+    cargoSub: '24 t · 33 pal',
+    vehicle: 'ZG 1234-AB',
+    driver: 'Ivan Horvat',
+    driverTone: 1,
+    invoice: 'nefakturiran',
+    price: '1.850 €',
+  },
+  {
+    client: 'Alpe Trade GmbH',
+    no: '#2056/2026',
+    agency: true,
+    from: '🇦🇹 1100',
+    fromDate: '11.11.',
+    to: '🇭🇷 51000',
+    toDate: '13.11.',
+    progress: 0,
+    cargo: '9,3 t',
+    cargoSub: '14 pal',
+    contractor: 'Transporti Kovač',
+    invoice: 'fakturiran',
+    due: 'dospijeće 2.12.',
+    price: '1.400 €',
+    margin: '+250 € · 18 %',
+  },
+  {
+    client: 'Drava Agro d.o.o.',
+    no: '#2055/2026',
+    from: '🇭🇷 31000',
+    fromDate: '12.11.',
+    to: '🇸🇮 1000',
+    toDate: '12.11.',
+    progress: 0,
+    cargo: '7,2 LDM',
+    cargoSub: '11 t · 18 pal',
+    invoice: 'nefakturiran',
+    price: '680 €',
+  },
+  {
+    client: 'Sava Steel d.o.o.',
+    no: '#2051/2026',
+    files: 4,
+    from: '🇭🇷 44000',
+    fromDate: '6.11.',
+    to: '🇮🇹 20121',
+    toDate: '8.11.',
+    progress: 2,
+    cargo: 'Izvanredni',
+    cargoSub: '22 t · 14,2 m',
+    vehicle: 'ST 456-CD',
+    driver: 'Marko Babić',
+    driverTone: 2,
+    invoice: 'placen',
+    price: '2.300 €',
+  },
+  {
+    client: 'Adria Foods d.o.o.',
+    no: '#2049/2026',
+    files: 1,
+    from: '🇭🇷 21000',
+    fromDate: '5.11.',
+    to: '🇭🇺 1051',
+    toDate: '6.11.',
+    progress: 2,
+    cargo: '13,6 LDM',
+    cargoSub: '18 t · 33 pal',
+    vehicle: 'RI 789-EF',
+    driver: 'Ana Perić',
+    driverTone: 3,
+    invoice: 'fakturiran',
+    due: 'dospijeće 6.12.',
+    price: '1.120 €',
+  },
+  {
+    client: 'Panonia Pack d.o.o.',
+    no: '#2047/2026',
+    from: '🇭🇷 42000',
+    fromDate: '4.11.',
+    to: '🇦🇹 4020',
+    toDate: '5.11.',
+    progress: 2,
+    cargo: '6,4 LDM',
+    cargoSub: '8 t · 16 pal',
+    vehicle: 'VŽ 321-GH',
+    driver: 'Petar Novak',
+    driverTone: 4,
+    invoice: 'placen',
+    price: '940 €',
+  },
+];
+
+// Cargo, prices and due dates in the page language (same order as ROWS).
+const LROWS = ROWS.map((r, i) => ({
+  ...r,
+  cargo: w.nalozi.rows.cargo[i],
+  cargoSub: w.nalozi.rows.cargoSub[i],
+  price: w.nalozi.rows.price[i],
+  margin: r.margin ? w.nalozi.rows.margin : undefined,
+  due: r.due ? w.nalozi.due(r.due.replace('dospijeće ', '')) : undefined,
+}));
+
+const DRIVER = {
+  1: 'bg-driver-1-soft text-driver-1-ink',
+  2: 'bg-driver-2-soft text-driver-2-ink',
+  3: 'bg-driver-3-soft text-driver-3-ink',
+  4: 'bg-driver-4-soft text-driver-4-ink',
+};
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((p) => p[0])
+    .join('');
+---
+
+<div class="text-[12.5px]">
+  <div class="mb-3 flex items-center gap-2">
+    <div class="font-heading text-[17px] font-bold tracking-tight">{w.nav.nalozi}</div>
+    <div class="ml-auto flex gap-1.5">
+      <span class="hidden h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 font-semibold @2xl:inline-flex">
+        <Icon name="upload" size={14} /> {w.uploadOrder}
+      </span>
+      <span class="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-2.5 font-semibold text-primary-foreground">
+        <Icon name="plus" size={14} /> {w.addOrder}
+      </span>
+    </div>
+  </div>
+
+  <div class="mb-3 flex gap-5 border-b border-border text-[12.5px]">
+    <span class="-mb-px border-b-2 border-petrol pb-2 font-medium">{w.nav.nalozi}</span>
+    <span class="flex items-center gap-1.5 pb-2 text-muted-foreground">
+      {w.nalozi.drafts} <Badge tone="brand" look="solid" class="h-4 px-1.5 text-[10px]">2</Badge>
+    </span>
+  </div>
+
+  <div class="mb-2.5 flex flex-wrap items-center gap-1.5">
+    <span class="inline-flex h-7 items-center gap-1 rounded-md border border-border px-2">
+      {w.nalozi.loadStatus} <Icon name="chevron" size={12} />
+    </span>
+    <span class="hidden h-7 items-center gap-1 rounded-md border border-border px-2 @xl:inline-flex">
+      <Icon name="user" size={12} /> {w.nalozi.driver}
+    </span>
+    <span class="hidden h-7 items-center gap-1 rounded-md border border-border px-2 @xl:inline-flex">
+      <Icon name="calendar" size={12} /> {w.nalozi.date}
+    </span>
+    <span class="ml-auto text-[11.5px] text-muted-foreground tabular-nums">{w.nalozi.shown(rows)}</span>
+  </div>
+
+  <div class="overflow-hidden rounded-lg border border-border">
+    <div
+      class="grid grid-cols-[1.5fr_1.4fr_1fr] gap-3 border-b border-border bg-muted/60 px-3 py-2 text-[11px] font-medium text-muted-foreground @3xl:grid-cols-[1.5fr_1.5fr_0.9fr_1.2fr_1fr] @5xl:grid-cols-[1.5fr_1.5fr_0.9fr_1.2fr_1.1fr_0.9fr]"
+    >
+      <span>{w.nalozi.cols[0]}</span><span>{w.nalozi.cols[1]}</span><span class="hidden @3xl:block">{w.nalozi.cols[2]}</span><span class="hidden @3xl:block">{w.nalozi.cols[3]}</span><span>{w.nalozi.cols[4]}</span><span class="hidden text-right @5xl:block">{w.nalozi.cols[5]}</span>
+    </div>
+    {
+      LROWS.slice(0, rows).map((r) => (
+        <div class="grid grid-cols-[1.5fr_1.4fr_1fr] items-start gap-3 border-b border-border px-3 py-2.5 last:border-b-0 @3xl:grid-cols-[1.5fr_1.5fr_0.9fr_1.2fr_1fr] @5xl:grid-cols-[1.5fr_1.5fr_0.9fr_1.2fr_1.1fr_0.9fr]">
+          <div class="min-w-0">
+            <div class="truncate text-[13px] font-medium">{r.client}</div>
+            <div class="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground tabular-nums">
+              {r.no}
+              {r.agency && (
+                <Badge tone="category" icon="truck-loading" class="h-4 px-1.5 text-[10px]">
+                  {w.nalozi.agency}
+                </Badge>
+              )}
+              {r.files && (
+                <span class="inline-flex items-center gap-0.5">
+                  <Icon name="paperclip" size={11} />
+                  {r.files}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div class="min-w-0">
+            <div class="flex items-center gap-1">
+              <span class:list={['size-2 rounded-full', r.progress >= 1 ? 'bg-neutral-300' : 'bg-utovar-dot']} />
+              <span class:list={['h-px flex-1', r.progress >= 1 ? 'bg-neutral-300' : 'bg-border']} />
+              <span class:list={['size-2 rounded-full', r.progress >= 2 ? 'bg-neutral-300' : 'bg-istovar-dot']} />
+            </div>
+            <div class="mt-1 flex justify-between gap-2 text-[11px] text-muted-foreground tabular-nums">
+              <span class="truncate">
+                {r.from} <span class="text-foreground/50">{r.fromDate}</span>
+              </span>
+              <span class="truncate text-right">
+                {r.to} <span class="text-foreground/50">{r.toDate}</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="hidden min-w-0 @3xl:block">
+            <div class="flex items-center gap-1 font-medium">
+              {r.cargo}
+              {r.cargo === w.nalozi.oversize && <Icon name="alert" size={12} class="text-warning" />}
+            </div>
+            <div class="text-[11px] text-muted-foreground">{r.cargoSub}</div>
+          </div>
+
+          <div class="hidden min-w-0 @3xl:block">
+            {r.vehicle ? (
+              <div class="flex items-center gap-2">
+                <span
+                  class:list={[
+                    'flex size-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold',
+                    DRIVER[r.driverTone ?? 1],
+                  ]}
+                >
+                  {initials(r.driver ?? '')}
+                </span>
+                <div class="min-w-0">
+                  <div class="font-mono text-[11.5px] font-medium">{r.vehicle}</div>
+                  <div class="truncate text-[11px] text-muted-foreground">{r.driver}</div>
+                </div>
+              </div>
+            ) : r.contractor ? (
+              <div class="min-w-0">
+                <div class="truncate font-medium">{r.contractor}</div>
+                <div class="text-[11px] text-muted-foreground">{w.nalozi.contractor}</div>
+              </div>
+            ) : (
+              <span class="inline-flex h-7 items-center gap-1 rounded-md border border-dashed border-red-300 px-2 text-[11.5px] font-medium text-red-700">
+                <Icon name="plus" size={12} /> {w.nalozi.assign}
+              </span>
+            )}
+          </div>
+
+          <div class="min-w-0">
+            {r.invoice === 'nefakturiran' && <Badge tone="warning">{w.invoice.not}</Badge>}
+            {r.invoice === 'fakturiran' && <Badge tone="info">{w.invoice.invoiced}</Badge>}
+            {r.invoice === 'placen' && <Badge tone="success" icon="check">{w.invoice.paid}</Badge>}
+            {r.due && <div class="mt-1 text-[11px] text-muted-foreground">{r.due}</div>}
+          </div>
+
+          <div class="hidden text-right @5xl:block">
+            <div class="font-medium tabular-nums">{r.price}</div>
+            {r.margin && (
+              <Badge tone="success" class="mt-1 h-4 px-1.5 text-[10px] tabular-nums">
+                {r.margin}
+              </Badge>
+            )}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>

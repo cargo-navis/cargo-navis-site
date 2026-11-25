@@ -1,0 +1,60 @@
+---
+// Aplikacija za vozače (lab /driver): next stop card, xl 48px buttons, utovar orange, 📎 documents.
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  class?: string;
+}
+const { class: klass } = Astro.props;
+---
+
+<div
+  class:list={[
+    'relative mx-auto w-[260px] rounded-[2.6rem] border-[7px] border-neutral-900 bg-neutral-900 shadow-[0_30px_70px_-25px_rgb(0_0_0/0.45)]',
+    klass,
+  ]}
+>
+  <div class="overflow-hidden rounded-[2.1rem] bg-[#f6f7f7] text-left text-[12.5px] text-foreground">
+    <div class="flex items-center justify-between px-6 pt-3 text-[11px] font-semibold">
+      <span>9:41</span>
+      <span class="h-4 w-16 rounded-full bg-neutral-900"></span>
+      <span>5G</span>
+    </div>
+    <div class="px-4 pt-4 pb-3">
+      <div class="text-[11.5px] text-muted-foreground">Utorak, 11.11.</div>
+      <div class="font-heading text-[19px] font-bold tracking-tight">Bok, Ivane</div>
+    </div>
+
+    <div class="mx-3 rounded-2xl border border-border bg-white p-3.5 shadow-sm">
+      <div class="flex items-center gap-2">
+        <span class="text-[10.5px] font-semibold tracking-wide text-utovar uppercase">Utovar</span>
+        <span class="text-[11.5px] text-muted-foreground">danas · 14:00</span>
+      </div>
+      <div class="mt-1 font-heading text-[17px] leading-tight font-bold tracking-tight">Rosenheim</div>
+      <div class="text-[12px] text-muted-foreground">Bayern Holz GmbH · Industriestraße 12</div>
+      <div class="mt-2.5 flex flex-wrap gap-1.5 text-[11.5px]">
+        <span class="rounded-full border border-border px-2 py-0.5">#2058 · 9,3 t · 14 pal</span>
+        <span class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5">
+          <Icon name="paperclip" size={11} /> 2
+        </span>
+      </div>
+      <span class="mt-3.5 flex h-12 items-center justify-center gap-2 rounded-xl bg-primary text-[15px] font-semibold text-primary-foreground">
+        <Icon name="check" size={18} /> Potvrdi utovar
+      </span>
+      <span class="mt-2 flex h-11 items-center justify-center gap-2 rounded-xl border border-border text-[14px] font-semibold">
+        <Icon name="camera" size={17} /> Dodaj dokument
+      </span>
+    </div>
+
+    <div class="mx-3 mt-2.5 flex items-center gap-2.5 rounded-2xl border border-border bg-white px-3.5 py-2.5 opacity-80">
+      <span class="text-[10.5px] font-semibold tracking-wide text-istovar uppercase">Istovar</span>
+      <span class="truncate">Ljubljana · 14.11.</span>
+    </div>
+
+    <div class="mt-4 grid grid-cols-3 border-t border-border bg-white px-2 pt-2 pb-5 text-center text-[10.5px]">
+      <span class="flex flex-col items-center gap-0.5 font-semibold text-petrol"><Icon name="route" size={18} />Ruta</span>
+      <span class="flex flex-col items-center gap-0.5 text-muted-foreground"><Icon name="file" size={18} />Dokumenti</span>
+      <span class="flex flex-col items-center gap-0.5 text-muted-foreground"><Icon name="user" size={18} />Profil</span>
+    </div>
+  </div>
+</div>

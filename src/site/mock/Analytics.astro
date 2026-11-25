@@ -1,0 +1,72 @@
+---
+// Analitika (lab /analytics): tiles with change vs previous period, bars per window (≤24px, 4px top radius), current
+// period lighter + „u tijeku”, vlastiti teal / agencijski violet.
+interface Props {
+  tiles?: boolean;
+}
+const { tiles = true } = Astro.props;
+
+const BARS = [
+  [62, 18],
+  [70, 22],
+  [58, 26],
+  [76, 20],
+  [84, 28],
+  [72, 30],
+  [90, 26],
+  [88, 34],
+  [96, 30],
+  [80, 38],
+  [104, 36],
+  [52, 18],
+];
+const MONTHS = ['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
+const TILES = [
+  { label: 'Prihod', value: '48.250 €', delta: '+12 %' },
+  { label: 'Nalozi', value: '126', delta: '+8 %' },
+  { label: 'RUC agencijski', value: '6.940 €', delta: '+4 %' },
+];
+const max = 140;
+---
+
+<div class="text-[12.5px]">
+  {
+    tiles && (
+      <div class="mb-4 grid grid-cols-3 gap-2">
+        {TILES.map((t) => (
+          <div class="rounded-lg border border-border p-2.5">
+            <div class="text-[11px] text-muted-foreground">{t.label}</div>
+            <div class="font-heading text-[17px] font-bold tracking-tight tabular-nums">{t.value}</div>
+            <div class="text-[11px] font-medium text-success">{t.delta} vs prošli mjesec</div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  <div class="mb-2 flex items-center gap-3 text-[11px] text-muted-foreground">
+    <span class="font-medium text-foreground">Prihod po mjesecu</span>
+    <span class="ml-auto flex items-center gap-1"><span class="size-2 rounded-sm bg-series-regular"></span>Vlastiti</span>
+    <span class="flex items-center gap-1"><span class="size-2 rounded-sm bg-series-agency"></span>Agencijski</span>
+  </div>
+  <div class="flex h-36 items-end gap-[6px] border-b border-border">
+    {
+      BARS.map(([own, agency], i) => {
+        const current = i === BARS.length - 1;
+        return (
+          <div class="relative flex h-full flex-1 flex-col items-center justify-end">
+            {current && (
+              <span class="absolute -top-0.5 text-[9.5px] whitespace-nowrap text-muted-foreground">u tijeku</span>
+            )}
+            <div class:list={['flex w-full max-w-[22px] flex-col gap-[2px]', current && 'opacity-45']}>
+              <div class="rounded-t-[4px] bg-series-agency" style={`height:${(agency / max) * 144}px`} />
+              <div class="bg-series-regular" style={`height:${(own / max) * 144}px`} />
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+  <div class="mt-1 flex gap-[6px] text-center text-[9.5px] text-muted-foreground">
+    {MONTHS.map((m) => <span class="flex-1">{m}</span>)}
+  </div>
+</div>

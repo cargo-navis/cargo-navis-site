@@ -1,0 +1,248 @@
+// Every string in the app mocks, HR + EN (the app has an English UI). Numbers follow the language: 1.850 € / 13,6 LDM in
+// Croatian, €1,850 / 13.6 LDM in English; dates stay 10.11. (the app's formatter). Mocks call appWords(Astro.url).
+import { isEn } from '../locale';
+
+const hr = {
+  nav: {
+    pocetna: 'Početna',
+    nalozi: 'Nalozi',
+    prijevozi: 'Prijevozi',
+    flota: 'Flota',
+    klijenti: 'Klijenti',
+    podvozari: 'Podvozari',
+    zaposlenici: 'Zaposlenici',
+    analitika: 'Analitika',
+  },
+  newOrder: 'Novi nalog',
+  uploadOrder: 'Učitaj nalog',
+  addOrder: 'Dodaj nalog',
+  search: 'Pretraži…',
+  crumbs: { newFromPdf: 'Novi nalog iz PDF-a', assign: 'Dodijeli vozilo', deadlines: 'Rokovi' },
+  kind: { utovar: 'Utovar', istovar: 'Istovar' },
+  today: 'danas',
+  tomorrow: 'sutra',
+  next: 'Sljedeće',
+
+  nalozi: {
+    drafts: 'Nalozi u pripremi',
+    loadStatus: 'Status utovara: Svi',
+    driver: 'Vozač',
+    date: 'Datum',
+    shown: (n: number) => `Prikazano 1–${n} od 248`,
+    cols: ['Nalog', 'Utovar / Istovar', 'Teret', 'Vozilo / Vozač', 'Status fakture', 'Cijena'],
+    agency: 'Agencijski',
+    oversize: 'Izvanredni',
+    contractor: 'Podvozar',
+    assign: 'Dodijeli vozilo',
+    due: (d: string) => `dospijeće ${d}`,
+    rows: {
+      cargo: ['13,6 LDM', '9,3 t', '7,2 LDM', 'Izvanredni', '13,6 LDM', '6,4 LDM'],
+      cargoSub: ['24 t · 33 pal', '14 pal', '11 t · 18 pal', '22 t · 14,2 m', '18 t · 33 pal', '8 t · 16 pal'],
+      price: ['1.850 €', '1.400 €', '680 €', '2.300 €', '1.120 €', '940 €'],
+      margin: '+250 € · 18 %',
+    },
+  },
+  invoice: { not: 'Nefakturiran', invoiced: 'Fakturiran', paid: 'Plaćen', late: 'Kasni s plaćanjem' },
+
+  pdf: {
+    file: 'nalog-KL-88412.pdf',
+    banner: ['Podaci iz ', '. Polja sa ✦ popunila je AI, provjeri ih prije spremanja.'],
+    fields: [
+      { label: 'Klijent', value: 'Kvarner Logistika d.o.o.' },
+      { label: 'Cijena', value: '1.850 €' },
+      { label: 'Vanjska referenca', value: 'KL-88412' },
+      { label: 'Utovar', value: '🇭🇷 Zagreb · 10.11.' },
+      { label: 'Istovar', value: '🇩🇪 München · 12.11.' },
+      { label: 'Teret', value: '13,6 LDM · 24.000 kg · 33 pal' },
+    ],
+    summary: '1 teret · 13,6 LDM · 1.850 €',
+    cancel: 'Odustani',
+    create: 'Kreiraj nalog',
+  },
+
+  assign: {
+    vehicle: 'Vozilo',
+    where: (d: string, place: string) => `${d} u: ${place}`,
+    clash: 'Već ima istovar 10.11. · Wien',
+    notify: 'Obavijesti vozača (Ivan Horvat)',
+    route: 'Ruta',
+    isNew: 'Novo · #2057',
+    submit: 'Dodijeli ZG 1234-AB',
+  },
+
+  ruta: {
+    title: 'Ruta',
+    type: 'Tegljač',
+    summary: '4 mjesta · do 14.11.',
+    confirmUnloading: 'Potvrdi istovar',
+    confirmedBy: 'Potvrdio vozač 10.11. 9:42',
+    notified: 'Obaviješten 9.11. 16:05',
+    notNotified: 'Nije obaviješten',
+    notifyNow: 'Obavijesti',
+    cargo: ['#2057 · 13,6 LDM', '#2057 · 13,6 LDM', '#2058 · 9,3 t · 14 pal', '#2058 · 9,3 t · 14 pal'],
+  },
+
+  phone: {
+    date: 'Utorak, 11.11.',
+    hello: 'Bok, Ivane',
+    empty: 'Nema novih utovara',
+    todayAt: 'danas · 14:00',
+    confirmedAt: 'Potvrđeno 14:01',
+    cargo: '#2058 · 9,3 t · 14 pal',
+    confirm: 'Potvrdi utovar',
+    confirmed: 'Utovar potvrđen',
+    addDoc: 'Dodaj dokument',
+    toast: ['Utovar potvrđen', ' · dispečer je obaviješten'],
+    tabs: ['Ruta', 'Dokumenti', 'Profil'],
+    now: 'sada',
+    notifTitle: 'Novi utovar · Rosenheim',
+    notifBody: 'Danas 14:00 · Bayern Holz GmbH · #2058',
+    office: 'Ti, u uredu',
+    notNotified: 'Nije obaviješten',
+    notify: 'Obavijesti',
+    notified: 'Obaviješten 11.11. 13:12 · čeka potvrdu',
+    confirmedBy: 'Potvrdio vozač · 14:01',
+  },
+
+  fakture: {
+    uninvoiced: 'Nefakturirano',
+    uninvoicedValue: '12 · 14.300 €',
+    overdue: 'Dospjelo neplaćeno',
+    overdueValue: '3 · 4.100 €',
+    rows: [
+      { due: '', price: '1.850 €' },
+      { due: 'dospijeće 2.12.', price: '1.400 €', margin: '+250 € · 18 %' },
+      { due: 'kasni 6 dana', price: '1.090 €' },
+      { due: '', price: '2.300 €' },
+    ],
+  },
+
+  rokovi: {
+    what: ['Registracija', 'KOD 95', 'Tahograf', 'Vozačka dozvola'],
+    badge: ['Istječe za 18 d', 'Isteklo prije 8 d', 'Istječe za 27 d', 'Vrijedi do 3.4.2029.'],
+  },
+};
+
+const en: typeof hr = {
+  nav: {
+    pocetna: 'Home',
+    nalozi: 'Shipments',
+    prijevozi: 'Transports',
+    flota: 'Fleet',
+    klijenti: 'Clients',
+    podvozari: 'Subcontractors',
+    zaposlenici: 'Employees',
+    analitika: 'Analytics',
+  },
+  newOrder: 'New shipment',
+  uploadOrder: 'Upload shipment',
+  addOrder: 'Add shipment',
+  search: 'Search…',
+  crumbs: { newFromPdf: 'New shipment from PDF', assign: 'Assign vehicle', deadlines: 'Deadlines' },
+  kind: { utovar: 'Loading', istovar: 'Unloading' },
+  today: 'today',
+  tomorrow: 'tomorrow',
+  next: 'Next',
+
+  nalozi: {
+    drafts: 'Draft shipments',
+    loadStatus: 'Loading status: All',
+    driver: 'Driver',
+    date: 'Date',
+    shown: (n: number) => `Showing 1–${n} of 248`,
+    cols: ['Shipment', 'Loading / Unloading', 'Cargo', 'Vehicle / Driver', 'Invoice status', 'Price'],
+    agency: 'Brokered',
+    oversize: 'Oversize',
+    contractor: 'Subcontractor',
+    assign: 'Assign vehicle',
+    due: (d: string) => `due ${d}`,
+    rows: {
+      cargo: ['13.6 LDM', '9.3 t', '7.2 LDM', 'Oversize', '13.6 LDM', '6.4 LDM'],
+      cargoSub: ['24 t · 33 plt', '14 plt', '11 t · 18 plt', '22 t · 14.2 m', '18 t · 33 plt', '8 t · 16 plt'],
+      price: ['€1,850', '€1,400', '€680', '€2,300', '€1,120', '€940'],
+      margin: '+€250 · 18%',
+    },
+  },
+  invoice: { not: 'Not invoiced', invoiced: 'Invoiced', paid: 'Paid', late: 'Overdue' },
+
+  pdf: {
+    file: 'shipment-KL-88412.pdf',
+    banner: ['Data from ', '. Fields marked ✦ were filled in by AI, check them before saving.'],
+    fields: [
+      { label: 'Client', value: 'Kvarner Logistika d.o.o.' },
+      { label: 'Price', value: '€1,850' },
+      { label: 'External reference', value: 'KL-88412' },
+      { label: 'Loading', value: '🇭🇷 Zagreb · 10.11.' },
+      { label: 'Unloading', value: '🇩🇪 München · 12.11.' },
+      { label: 'Cargo', value: '13.6 LDM · 24,000 kg · 33 plt' },
+    ],
+    summary: '1 load · 13.6 LDM · €1,850',
+    cancel: 'Cancel',
+    create: 'Create shipment',
+  },
+
+  assign: {
+    vehicle: 'Vehicle',
+    where: (d: string, place: string) => `${d} in: ${place}`,
+    clash: 'Already unloading 10.11. · Wien',
+    notify: 'Notify the driver (Ivan Horvat)',
+    route: 'Route',
+    isNew: 'New · #2057',
+    submit: 'Assign ZG 1234-AB',
+  },
+
+  ruta: {
+    title: 'Route',
+    type: 'Truck',
+    summary: '4 stops · until 14.11.',
+    confirmUnloading: 'Confirm unloading',
+    confirmedBy: 'Confirmed by driver 10.11. 9:42',
+    notified: 'Notified 9.11. 16:05',
+    notNotified: 'Not notified',
+    notifyNow: 'Notify',
+    cargo: ['#2057 · 13.6 LDM', '#2057 · 13.6 LDM', '#2058 · 9.3 t · 14 plt', '#2058 · 9.3 t · 14 plt'],
+  },
+
+  phone: {
+    date: 'Tuesday, 11.11.',
+    hello: 'Hi, Ivan',
+    empty: 'No new loadings',
+    todayAt: 'today · 14:00',
+    confirmedAt: 'Confirmed 14:01',
+    cargo: '#2058 · 9.3 t · 14 plt',
+    confirm: 'Confirm loading',
+    confirmed: 'Loading confirmed',
+    addDoc: 'Add document',
+    toast: ['Loading confirmed', ' · dispatcher notified'],
+    tabs: ['Route', 'Documents', 'Profile'],
+    now: 'now',
+    notifTitle: 'New loading · Rosenheim',
+    notifBody: 'Today 14:00 · Bayern Holz GmbH · #2058',
+    office: 'You, at the office',
+    notNotified: 'Not notified',
+    notify: 'Notify',
+    notified: 'Notified 11.11. 13:12 · awaiting confirmation',
+    confirmedBy: 'Confirmed by driver · 14:01',
+  },
+
+  fakture: {
+    uninvoiced: 'Not invoiced',
+    uninvoicedValue: '12 · €14,300',
+    overdue: 'Overdue',
+    overdueValue: '3 · €4,100',
+    rows: [
+      { due: '', price: '€1,850' },
+      { due: 'due 2.12.', price: '€1,400', margin: '+€250 · 18%' },
+      { due: '6 days late', price: '€1,090' },
+      { due: '', price: '€2,300' },
+    ],
+  },
+
+  rokovi: {
+    what: ['Registration', 'Code 95', 'Tachograph', 'Driving licence'],
+    badge: ['Expires in 18 d', 'Expired 8 d ago', 'Expires in 27 d', 'Valid until 3.4.2029.'],
+  },
+};
+
+export type AppWords = typeof hr;
+export const appWords = (url: URL): AppWords => (isEn(url) ? en : hr);

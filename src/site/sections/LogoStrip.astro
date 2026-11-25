@@ -1,0 +1,38 @@
+---
+// Customer logos: greyscale, scrolling. `label` above them (`false` = none); `size="lg"` for bigger logos (A2).
+import { Image } from 'astro:assets';
+import { getCopy } from '../locale';
+
+interface Props {
+  label?: string | false;
+  size?: 'md' | 'lg';
+  class?: string;
+}
+const { logos } = getCopy(Astro.url);
+const { label = false, size = 'md', class: klass } = Astro.props;
+const loop = [...logos, ...logos, ...logos, ...logos];
+---
+
+<section class:list={['py-12', klass]}>
+  <div class="mx-auto max-w-[1200px] px-6">
+    {label && <p class="mb-6 text-center text-[13.5px] font-medium text-muted-foreground">{label}</p>}
+    <div class="overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
+      <div class:list={['marquee-track items-center', size === 'lg' ? 'gap-20' : 'gap-16']}>
+        {
+          /* Only the first set carries alt text; the three repeats exist for the scroll loop. */
+          loop.map((l, i) => (
+            <Image
+              src={l.src}
+              alt={i < logos.length ? l.alt : ''}
+              aria-hidden={i < logos.length ? undefined : 'true'}
+              class:list={[
+                'flex-none object-contain opacity-60 grayscale',
+                size === 'lg' ? 'h-14 w-44 max-sm:h-11 max-sm:w-36' : 'h-10 w-32',
+              ]}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,39 @@
+---
+// „A između toga, sve ostalo.” (from B): dark petrol band, stats top right, the six smaller features in a 3 × 2 grid
+// with hairlines. Used by A, A2, A3, B.
+import Icon, { type IconName } from '../ui/Icon.astro';
+import { getCopy } from '../locale';
+
+const { more, stats, ui, anchors } = getCopy(Astro.url);
+---
+
+<section id={anchors.features} class="bg-teal-950 py-24 text-white max-md:py-16">
+  <div class="mx-auto max-w-[1200px] px-6">
+    <div class="mb-12 flex flex-wrap items-end justify-between gap-6">
+      <h2 data-reveal class="max-w-xl text-[clamp(1.75rem,1.2rem+2vw,2.5rem)] leading-[1.15]">
+        {ui.moreTitle}
+      </h2>
+      <div class="flex gap-10">
+        {
+          stats.map((s) => (
+            <div>
+              <div class="font-heading text-[28px] font-bold tracking-tight text-teal-300 tabular-nums">{s.value}</div>
+              <div class="text-[13.5px] text-white/60">{s.label}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <div class="grid gap-px overflow-hidden rounded-2xl bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        more.map((m) => (
+          <div class="bg-teal-950 p-7">
+            <Icon name={m.icon as IconName} size={22} class="mb-4 text-teal-300" />
+            <h3 class="text-[17px] leading-snug">{m.title}</h3>
+            <p class="mt-2 text-[14.5px] text-white/65">{m.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

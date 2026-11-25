@@ -1,0 +1,79 @@
+---
+// The screenshot for one step of the daily path (or a `more` item), framed as the app. Swap for real screenshots.
+import Shot from '../ui/Shot.astro';
+import AppWindow from '../mock/AppWindow.astro';
+import PdfToNalog from '../mock/PdfToNalog.astro';
+import Assign from '../mock/Assign.astro';
+import Ruta from '../mock/Ruta.astro';
+import DriverPhone from '../mock/DriverPhone.astro';
+import DriverPhoneLive from '../mock/DriverPhoneLive.astro';
+import { appWords } from '../mock/words';
+import Fakture from '../mock/Fakture.astro';
+import Rokovi from '../mock/Rokovi.astro';
+import Analytics from '../mock/Analytics.astro';
+
+interface Props {
+  id: string;
+  name: string;
+  class?: string;
+  /** Driver step: the tilted, animated phone (notification → utovar confirmed) instead of the flat one. */
+  phoneLive?: boolean;
+}
+const { id, name, class: klass, phoneLive = false } = Astro.props;
+const w = appWords(Astro.url);
+---
+
+<Shot name={name} class={klass}>
+  {
+    id === 'nalog' && (
+      <AppWindow active="nalozi" crumbs={[w.nav.nalozi, w.crumbs.newFromPdf]} bare>
+        <PdfToNalog />
+      </AppWindow>
+    )
+  }
+  {
+    id === 'vozilo' && (
+      <AppWindow active="nalozi" crumbs={[w.nav.nalozi, '#2057/2026', w.crumbs.assign]} bare>
+        <Assign />
+      </AppWindow>
+    )
+  }
+  {
+    id === 'ruta' && (
+      <AppWindow active="prijevozi" crumbs={[w.nav.prijevozi, 'ZG 1234-AB']} bare>
+        <Ruta />
+      </AppWindow>
+    )
+  }
+  {
+    id === 'vozac' &&
+      (phoneLive ? (
+        <DriverPhoneLive />
+      ) : (
+        <div class="flex justify-center rounded-2xl bg-frame py-8">
+          <DriverPhone />
+        </div>
+      ))
+  }
+  {
+    id === 'faktura' && (
+      <AppWindow active="pocetna" crumbs={[w.nav.pocetna]} bare>
+        <Fakture />
+      </AppWindow>
+    )
+  }
+  {
+    id === 'flota' && (
+      <AppWindow active="flota" crumbs={[w.nav.flota, w.crumbs.deadlines]} bare>
+        <Rokovi />
+      </AppWindow>
+    )
+  }
+  {
+    id === 'analitika' && (
+      <AppWindow active="analitika" crumbs={[w.nav.analitika]} bare>
+        <Analytics />
+      </AppWindow>
+    )
+  }
+</Shot>
