@@ -228,6 +228,10 @@
   width: max-content;
   animation: marquee 36s linear infinite;
 }
+/* Hold still while the pointer is on the strip, so a logo stays under it (and keeps its hover colours). */
+.marquee-track:hover {
+  animation-play-state: paused;
+}
 
 /* Dashed route legs that slowly flow (hero route patterns). */
 @keyframes dash-flow {
