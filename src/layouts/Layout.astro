@@ -1,8 +1,13 @@
 ---
 import '../styles/global.css';
-import { SITE, META, LEGAL } from '../consts';
+import { SITE, META, LEGAL, OG_IMAGE, ORG_ID } from '../consts';
 import { getLocale, stripLocale } from '../i18n/utils';
 import { defaultLocale, locales } from '../i18n/ui';
+import Analytics from '../components/Analytics.astro';
+// Heading font (Sora 700) for the LCP <h1>: preloaded so it does not wait for the CSS to be parsed. Same files the
+// @fontsource CSS in global.css references, so Vite emits one hashed copy. latin-ext carries č ć š ž đ.
+import soraLatin from '@fontsource/sora/files/sora-latin-700-normal.woff2?url';
+import soraLatinExt from '@fontsource/sora/files/sora-latin-ext-700-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -11,11 +16,14 @@ interface Props {
   path?: string;
   ogImage?: string;
   noindex?: boolean;
+  /** Extra JSON-LD objects for this page (the Organization one is always emitted). */
+  jsonLd?: Record<string, unknown>[];
 }
 
 const locale = getLocale(Astro.url);
 const meta = META[locale];
-const { title = meta.title, description = meta.description, path, ogImage, noindex = false } = Astro.props;
+const { title = meta.title, description = meta.description, path, ogImage, noindex = false, jsonLd = [] } = Astro.props;
+const fontPreloads = locale === 'hr' ? [soraLatin, soraLatinExt] : [soraLatin];
 
 // Derive the locale-agnostic path from the current URL when not passed explicitly.
 const rawPath = path ?? stripLocale(Astro.url.pathname);
@@ -28,14 +36,17 @@ const hrefFor = (loc: string) => {
 };
 
 const canonical = hrefFor(locale);
-const ogImageUrl = new URL(ogImage ?? SITE.ogImage, SITE.url).href;
+const ogImageUrl = new URL(ogImage ?? OG_IMAGE[locale].src, SITE.url).href;
+const ogImageAlt = OG_IMAGE[locale].alt;
 const htmlLang = locale === 'hr' ? 'hr-HR' : 'en';
 
 const orgJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': ORG_ID,
   name: SITE.name,
   url: SITE.url,
+  sameAs: SITE.profiles,
   logo: new URL('/android-chrome-512x512.png', SITE.url).href,
   email: SITE.contactEmail,
   legalName: LEGAL.companyName,
@@ -55,6 +66,8 @@ const orgJsonLd = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Phone browser bar in the hero's petrol, so it blends with the top of the page. */}
+    <meta name="theme-color" content="#0b5560" />
     <meta name="generator" content={Astro.generator} />
 
     <title>{title}</title>
@@ -76,29 +89,26 @@ const orgJsonLd = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
 
     {/* Twitter */}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     {/* Icons */}
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" href="/android-chrome-512x512.png" />
 
-    {/* Preload primary font weight */}
-    <link
-      rel="preload"
-      href="/fonts/dmsans-regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+    {fontPreloads.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
 
     <script type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
+    {jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
   </head>
   <body>
     <slot />
@@ -121,5 +131,6 @@ const orgJsonLd = {
         els.forEach((el) => io.observe(el));
       }
     </script>
+    <Analytics />
   </body>
 </html>

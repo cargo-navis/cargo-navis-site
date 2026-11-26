@@ -1,22 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Navbar from '../../components/Navbar.astro';
-import DemoSection from '../../components/DemoSection.astro';
-import LogoMarquee from '../../components/LogoMarquee.astro';
-import Testimonials from '../../components/Testimonials.astro';
-import Footer from '../../components/Footer.astro';
-import { demo } from '../../data/demo';
-import { getLocale } from '../../i18n/utils';
+import DemoPage from '../../site/sections/DemoPage.astro';
+import { DEMO_PATH } from '../../consts';
+import { getCopy } from '../../site/locale';
 
-const copy = demo[getLocale(Astro.url)];
+const { demo } = getCopy(Astro.url);
 ---
 
-<Layout path="/demo" title={copy.metaTitle} description={copy.metaDescription}>
-  <Navbar />
-  <DemoSection />
-  <main class="main-wrapper">
-    <LogoMarquee />
-    <Testimonials />
-  </main>
-  <Footer />
+<Layout path={DEMO_PATH} title={demo.metaTitle} description={demo.metaDescription}>
+  <DemoPage />
 </Layout>

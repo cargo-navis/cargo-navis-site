@@ -1,0 +1,97 @@
+---
+// Dodijeli vozilo (lab /assign): vehicle dropdown saying where each vehicle is on the loading day, amber clash, then the
+// chosen vehicle's vertical timeline with the new stops pulsing.
+import Icon from '../ui/Icon.astro';
+import { appWords } from './words';
+
+const w = appWords(Astro.url);
+
+const OPTIONS = [
+  { reg: 'ZG 1234-AB', driver: 'Ivan Horvat', where: w.assign.where('10.11.', 'Ljubljana'), selected: true },
+  { reg: 'ST 456-CD', driver: 'Marko Babić', where: w.assign.where('10.11.', 'Zagreb') },
+  { reg: 'RI 789-EF', driver: 'Ana Perić', clash: w.assign.clash },
+];
+const TIMELINE = [
+  { kind: 'istovar' as const, label: '8.11. · Ljubljana', done: true },
+  { kind: 'utovar' as const, label: '10.11. · Zagreb', isNew: true },
+  { kind: 'istovar' as const, label: '12.11. · München', isNew: true },
+];
+---
+
+<div class="grid gap-4 text-[12.5px] @2xl:grid-cols-[1.2fr_1fr]">
+  <div>
+    <div class="mb-1 text-[11.5px] font-medium">{w.assign.vehicle}</div>
+    <div class="flex h-9 items-center justify-between rounded-lg border border-petrol px-2.5 ring-3 ring-petrol/15">
+      <span class="font-mono font-medium">ZG 1234-AB</span>
+      <Icon name="chevron" size={14} class="text-muted-foreground" />
+    </div>
+    <div class="mt-1.5 overflow-hidden rounded-lg border border-border bg-card shadow-lg">
+      {
+        OPTIONS.map((o) => (
+          <div class:list={['flex items-start gap-2 px-2.5 py-2', o.selected && 'bg-muted']}>
+            <Icon name="truck" size={15} class="mt-0.5 text-muted-foreground" />
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-medium">{o.reg}</span>
+                <span class="truncate text-muted-foreground">{o.driver}</span>
+              </div>
+              {o.where && <div class="text-[11px] text-muted-foreground">{o.where}</div>}
+              {o.clash && (
+                <div class="flex items-center gap-1 text-[11px] text-warning">
+                  <Icon name="alert" size={11} />
+                  {o.clash}
+                </div>
+              )}
+            </div>
+            {o.selected && <Icon name="check" size={14} class="mt-0.5 text-petrol" />}
+          </div>
+        ))
+      }
+    </div>
+    <label class="mt-3 flex items-center gap-2">
+      <span class="flex size-4 items-center justify-center rounded bg-primary text-white"><Icon name="check" size={11} stroke={3} /></span>
+      {w.assign.notify}
+    </label>
+  </div>
+
+  <div class="min-w-0">
+    <div class="mb-2 text-[11.5px] font-medium">{w.assign.route} <span class="font-mono">ZG 1234-AB</span></div>
+    <ol class="relative ml-1.5 border-l border-dashed border-neutral-300">
+      {
+        TIMELINE.map((t) => (
+          <li class="relative pb-3 pl-4 last:pb-0">
+            <span class="absolute top-1 -left-[5px] flex size-2.5 items-center justify-center">
+              {t.isNew && (
+                <span
+                  class:list={[
+                    'stop-pulse absolute inset-0 rounded-full',
+                    t.kind === 'utovar' ? 'bg-utovar-dot' : 'bg-istovar-dot',
+                  ]}
+                />
+              )}
+              <span
+                class:list={[
+                  'relative size-2.5 rounded-full',
+                  t.done ? 'bg-neutral-300' : t.kind === 'utovar' ? 'bg-utovar-dot' : 'bg-istovar-dot',
+                ]}
+              />
+            </span>
+            <div
+              class:list={[
+                'text-[10.5px] font-semibold tracking-wide uppercase',
+                t.done ? 'text-muted-foreground' : t.kind === 'utovar' ? 'text-utovar' : 'text-istovar',
+              ]}
+            >
+              {w.kind[t.kind]}
+              {t.isNew && <span class="ml-1 font-medium tracking-normal normal-case text-foreground/70">· {w.assign.isNew}</span>}
+            </div>
+            <div class:list={[t.done && 'text-muted-foreground']}>{t.label}</div>
+          </li>
+        ))
+      }
+    </ol>
+    <span class="mt-4 inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3 font-semibold text-primary-foreground">
+      {w.assign.submit}
+    </span>
+  </div>
+</div>

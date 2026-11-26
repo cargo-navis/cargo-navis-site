@@ -1,0 +1,116 @@
+---
+// Top navigation. `tone="dark"` sits on a petrol hero (white text), `light` on the page background. The HR · EN switch
+// links to the same page in the other language (A2 and the demo page exist in both). Below lg the section links,
+// Log in and the language switch move into a disclosure menu (the ☰ button); the demo button stays in the bar.
+import Logo from '../ui/Logo.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { getCopy, siteLocale, otherLocaleHref } from '../locale';
+
+interface Props {
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+const { tone = 'light', class: klass } = Astro.props;
+const dark = tone === 'dark';
+const { nav, hero, ui, DEMO_HREF, LOGIN_HREF } = getCopy(Astro.url);
+const locale = siteLocale(Astro.url);
+const other = otherLocaleHref(Astro.url);
+const langClass = (active: boolean) =>
+  active ? (dark ? 'text-white' : 'text-foreground') : dark ? 'text-white/50 hover:text-white' : 'text-muted-foreground hover:text-foreground';
+const linkClass = dark ? 'text-white/80 hover:text-white' : 'text-foreground/70 hover:text-foreground';
+const hrHref = locale === 'hr' ? Astro.url.pathname : other;
+const enHref = locale === 'en' ? Astro.url.pathname : other;
+---
+
+<header class:list={['relative z-20', klass]} data-site-nav>
+  <div class="mx-auto flex h-18 max-w-[1200px] items-center gap-8 px-6">
+    <Logo inverted={dark} />
+    <nav class="flex items-center gap-7 text-[14.5px] font-medium max-lg:hidden" aria-label={ui.navAria}>
+      {
+        nav.map((l) => (
+          <a href={l.href} class:list={['transition-colors', linkClass]}>
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="ml-auto flex items-center gap-2">
+      <span class="mr-2 flex items-center gap-1.5 text-[13px] font-semibold max-lg:hidden">
+        <a href={hrHref} class={langClass(locale === 'hr')} hreflang="hr" aria-current={locale === 'hr' ? 'page' : undefined}>HR</a>
+        <span class={dark ? 'text-white/30' : 'text-border'}>·</span>
+        <a href={enHref} class={langClass(locale === 'en')} hreflang="en" aria-current={locale === 'en' ? 'page' : undefined}>EN</a>
+      </span>
+      <Button href={LOGIN_HREF} variant={dark ? 'inverse-outline' : 'ghost'} size="md" target="_blank" class="max-lg:hidden">
+        {hero.secondary}
+      </Button>
+      <Button href={DEMO_HREF} variant={dark ? 'inverse' : 'primary'} size="md">{hero.primary}</Button>
+      <button
+        type="button"
+        class:list={[
+          'flex size-10 items-center justify-center rounded-lg transition-colors lg:hidden',
+          dark ? 'text-white hover:bg-white/10' : 'text-foreground hover:bg-muted',
+        ]}
+        aria-expanded="false"
+        aria-controls="site-menu"
+        aria-label={ui.menuOpen}
+        data-menu-toggle
+        data-label-open={ui.menuOpen}
+        data-label-close={ui.menuClose}
+      >
+        <Icon name="menu" size={22} class="[[aria-expanded=true]_&]:hidden" />
+        <Icon name="x" size={22} class="hidden [[aria-expanded=true]_&]:block" />
+      </button>
+    </div>
+  </div>
+
+  {/* Small-screen menu: the same links as the bar, stacked. */}
+  <div
+    id="site-menu"
+    hidden
+    class:list={[
+      'absolute inset-x-0 top-full border-y px-6 py-4 shadow-lg lg:hidden',
+      dark ? 'border-white/15 bg-primary text-white' : 'border-border bg-background text-foreground',
+    ]}
+  >
+    <nav class="flex flex-col text-[16px] font-medium" aria-label={ui.navAria}>
+      {
+        nav.map((l) => (
+          <a href={l.href} class:list={['py-3 transition-colors', linkClass]} data-menu-link>
+            {l.label}
+          </a>
+        ))
+      }
+      <a href={LOGIN_HREF} target="_blank" rel="noopener noreferrer" class:list={['py-3 transition-colors', linkClass]}>
+        {hero.secondary}
+      </a>
+    </nav>
+    <div class:list={['mt-3 flex items-center gap-2 border-t pt-4 text-[14px] font-semibold', dark ? 'border-white/15' : 'border-border']}>
+      <a href={hrHref} class={langClass(locale === 'hr')} hreflang="hr" aria-current={locale === 'hr' ? 'page' : undefined}>HR</a>
+      <span class={dark ? 'text-white/30' : 'text-border'}>·</span>
+      <a href={enHref} class={langClass(locale === 'en')} hreflang="en" aria-current={locale === 'en' ? 'page' : undefined}>EN</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-site-nav]').forEach((header) => {
+    const toggle = header.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    const menu = header.querySelector<HTMLElement>('#site-menu');
+    if (!toggle || !menu) return;
+    const set = (open: boolean) => {
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', (open ? toggle.dataset.labelClose : toggle.dataset.labelOpen) ?? '');
+    };
+    toggle.addEventListener('click', () => set(menu.hasAttribute('hidden')));
+    // Same-page anchors: close the menu so the section is visible.
+    menu.querySelectorAll('[data-menu-link]').forEach((a) => a.addEventListener('click', () => set(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hasAttribute('hidden')) {
+        set(false);
+        toggle.focus();
+      }
+    });
+  });
+</script>

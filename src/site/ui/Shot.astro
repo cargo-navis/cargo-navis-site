@@ -1,0 +1,20 @@
+---
+// A screenshot slot. Today it holds an HTML mock of the new app; swap the slot for an <Image> of the real screen.
+// `name` is what the 📷 toggle in the lab bar shows. The mock is sample data (made-up clients, drivers, prices), so
+// it is hidden from assistive tech and search snippets; `caption` (visually hidden) says what the screen shows.
+import { getCopy } from '../locale';
+
+interface Props {
+  name: string;
+  caption?: string;
+  class?: string;
+}
+const { name, caption = getCopy(Astro.url).ui.shotCaption, class: klass } = Astro.props;
+---
+
+<figure data-shot={name} class={klass}>
+  <div aria-hidden="true" data-nosnippet>
+    <slot />
+  </div>
+  <figcaption class="sr-only">{caption}</figcaption>
+</figure>

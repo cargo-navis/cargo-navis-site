@@ -3,10 +3,22 @@ import type { Locale } from './i18n/ui';
 export const SITE = {
   name: 'Cargo Navis',
   url: 'https://www.cargo-navis.com',
-  ogImage: '/og-image.jpg', // 1200x630
   loginUrl: 'https://app.cargo-navis.com/login',
   contactEmail: 'info@cargo-navis.com',
+  // Company profiles, for the Organization structured data (`sameAs`).
+  profiles: ['https://www.linkedin.com/company/cargo-navis', 'https://www.facebook.com/profile.php?id=61578706550160'],
 } as const;
+
+// Structured-data IDs, so the blocks on a page point at each other instead of repeating the company.
+export const ORG_ID = `${SITE.url}/#organization`;
+export const WEBSITE_ID = `${SITE.url}/#website`;
+
+// Default link-preview image per locale (public/, 1200×630 PNG): the hero headline next to the driver app with a
+// confirmed utovar. Static files, made once from the site's fonts and colours; replace both if the hero copy changes.
+export const OG_IMAGE: Record<Locale, { src: string; alt: string }> = {
+  hr: { src: '/og-image-hr.png', alt: 'Cargo Navis: nalozi, vozila i vozači na jednom mjestu' },
+  en: { src: '/og-image-en.png', alt: 'Cargo Navis: shipments, vehicles and drivers in one place' },
+};
 
 // Legal entity behind the site — used by the privacy policy and Organization JSON-LD.
 export const LEGAL = {
@@ -15,7 +27,7 @@ export const LEGAL = {
   addressLines: ['Županjska ulica 21', '10000 Zagreb', 'Hrvatska / Croatia'],
   privacyEmail: SITE.contactEmail,
   // Keep in sync with the "last updated" line rendered on the policy pages.
-  privacyUpdated: '2026-09-08',
+  privacyUpdated: '2026-11-26',
 } as const;
 
 // Google Calendar appointment schedule powering /demo.
@@ -28,20 +40,16 @@ export const BOOKING_SCHEDULE_URL =
 export const DEMO_PATH = '/demo';
 export const PRIVACY_PATH = '/privacy-policy';
 
-// Kept for the footer/contact mailto links. Primary CTAs now point at /demo.
-export const INQUIRY_MAILTO = `mailto:${SITE.contactEmail}`;
-export const LOGIN_URL = SITE.loginUrl;
-
-// Per-locale page metadata. hr copied 1:1 from current site (SEO parity).
+// Per-locale home page metadata (2026-11 redesign copy: informal „ti”, app words).
 export const META: Record<Locale, { title: string; description: string }> = {
   hr: {
-    title: 'Cargo Navis - Digitalizirajte svoje poslovanje u prijevozu tereta',
+    title: 'Softver za prijevoznike: nalozi, vozila i vozači - Cargo Navis',
     description:
-      'Jedinstven sustav za upravljanje nalozima tereta i flotom. Pratite naloge u stvarnom vremenu, upravljajte vozilima i dokumentacijom te pojednostavite logistiku uz pametna upozorenja i intuitivne alate.',
+      'Nalog iz PDF-a za minutu, ruta svakog vozila na jednom ekranu, a vozači potvrđuju utovar i istovar u aplikaciji. Cargo Navis je softver za prijevoznike.',
   },
   en: {
-    title: 'Cargo Navis - Digitalize your freight transport business',
+    title: 'TMS software: shipments, vehicles, drivers - Cargo Navis',
     description:
-      'A unified system for managing freight orders and fleet. Track orders in real time, manage vehicles and documentation, and simplify logistics with smart alerts and intuitive tools.',
+      'A shipment from a PDF in a minute, every vehicle’s route on one screen, and drivers confirm loading and unloading in the app. Cargo Navis is TMS software for transport companies.',
   },
 };

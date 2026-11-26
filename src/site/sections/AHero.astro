@@ -1,0 +1,56 @@
+---
+// A's hero: petrol brand panel with the route pattern, headline, CTAs, three points, and the Nalozi window overlapping
+// into the white below. Used by A and A2.
+import SiteNav from './SiteNav.astro';
+import RoutePattern from '../ui/RoutePattern.astro';
+import Button from '../ui/Button.astro';
+import Icon, { type IconName } from '../ui/Icon.astro';
+import Shot from '../ui/Shot.astro';
+import AppWindow from '../mock/AppWindow.astro';
+import Nalozi from '../mock/Nalozi.astro';
+import { getCopy } from '../locale';
+
+const { hero, DEMO_HREF, LOGIN_HREF } = getCopy(Astro.url);
+---
+
+<section class="relative overflow-hidden bg-primary pb-[340px] text-white max-md:pb-[200px]">
+  <RoutePattern class="pointer-events-none absolute inset-0 size-full text-teal-300 opacity-70" flow />
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent to-teal-950/40"></div>
+  <SiteNav tone="dark" />
+  <div class="relative mx-auto max-w-[1200px] px-6 pt-20 max-md:pt-12">
+    <div class="max-w-3xl">
+      <span
+        class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[13px] font-medium text-white/85"
+      >
+        <span class="size-1.5 rounded-full bg-orange-400"></span>
+        {hero.eyebrow}
+      </span>
+      <h1 class="mt-6 text-[clamp(2.5rem,1.6rem+3.6vw,4.5rem)] leading-[1.05]">
+        {hero.title}
+      </h1>
+      <p class="mt-6 max-w-2xl text-[18px] text-white/80">{hero.sub}</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <Button href={DEMO_HREF} variant="inverse" iconEnd="arrow-right">{hero.primary}</Button>
+        <Button href={LOGIN_HREF} variant="inverse-outline" target="_blank">{hero.secondary}</Button>
+      </div>
+      <ul class="mt-12 grid gap-4 text-[14.5px] text-white/85 sm:grid-cols-3">
+        {
+          hero.points.map((p) => (
+            <li class="flex items-start gap-2.5">
+              <Icon name={p.icon as IconName} size={18} class="mt-0.5 text-teal-300" />
+              {p.text}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="relative z-10 mx-auto -mt-[300px] max-w-[1200px] px-6 max-md:-mt-[170px]">
+  <Shot name="hero-nalozi">
+    <AppWindow active="nalozi">
+      <Nalozi rows={5} />
+    </AppWindow>
+  </Shot>
+</div>

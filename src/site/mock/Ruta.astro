@@ -1,0 +1,167 @@
+---
+// Vehicle ruta (lab /transports): driver run = avatar + side bar in the driver's colour; cards with UTOVAR / ISTOVAR in
+// colour, „Sljedeće” on the next one, notification state; finished ones quieter with ✓.
+import Icon from '../ui/Icon.astro';
+import Badge from '../ui/Badge.astro';
+import { appWords } from './words';
+
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+const w = appWords(Astro.url);
+
+type Stop = {
+  kind: 'utovar' | 'istovar';
+  date: string;
+  place: string;
+  company: string;
+  cargo: string;
+  state: 'done' | 'next' | 'planned';
+  note?: { tone: 'ok' | 'warn'; text: string };
+};
+
+const RUNS: { driver: string; initials: string; tone: 1 | 2; stops: Stop[] }[] = [
+  {
+    driver: 'Ivan Horvat',
+    initials: 'IH',
+    tone: 1,
+    stops: [
+      {
+        kind: 'utovar',
+        date: '10.11.',
+        place: 'Zagreb',
+        company: 'Kvarner Logistika',
+        cargo: w.ruta.cargo[0],
+        state: 'done',
+        note: { tone: 'ok', text: w.ruta.confirmedBy },
+      },
+      {
+        kind: 'istovar',
+        date: w.today,
+        place: 'München',
+        company: 'Alpe Trade GmbH',
+        cargo: w.ruta.cargo[1],
+        state: 'next',
+        note: { tone: 'ok', text: w.ruta.notified },
+      },
+      {
+        kind: 'utovar',
+        date: w.tomorrow,
+        place: 'Rosenheim',
+        company: 'Bayern Holz GmbH',
+        cargo: w.ruta.cargo[2],
+        state: 'planned',
+        note: { tone: 'warn', text: w.ruta.notNotified },
+      },
+    ],
+  },
+  {
+    driver: 'Marko Babić',
+    initials: 'MB',
+    tone: 2,
+    stops: [
+      {
+        kind: 'istovar',
+        date: '14.11.',
+        place: 'Ljubljana',
+        company: 'Sava Trgovina',
+        cargo: w.ruta.cargo[3],
+        state: 'planned',
+      },
+    ],
+  },
+];
+
+const BAR = { 1: 'bg-driver-1', 2: 'bg-driver-2' };
+const AVATAR = { 1: 'bg-driver-1-soft text-driver-1-ink', 2: 'bg-driver-2-soft text-driver-2-ink' };
+---
+
+<div class="text-[12.5px]">
+  {
+    !compact && (
+      <div class="mb-3 flex items-center gap-2">
+        <div class="font-heading text-[17px] font-bold tracking-tight">
+          {w.ruta.title} <span class="font-mono font-medium tracking-normal">ZG 1234-AB</span>
+        </div>
+        <Badge tone="neutral" look="outline" class="ml-1">
+          {w.ruta.type}
+        </Badge>
+        <span class="ml-auto text-[11.5px] text-muted-foreground">{w.ruta.summary}</span>
+      </div>
+    )
+  }
+  <div class="flex flex-col gap-3">
+    {
+      RUNS.map((run) => (
+        <div class="flex gap-2.5">
+          <div class="flex w-6 flex-col items-center gap-1.5">
+            <span
+              class:list={[
+                'flex size-6 items-center justify-center rounded-full text-[10px] font-semibold',
+                AVATAR[run.tone],
+              ]}
+            >
+              {run.initials}
+            </span>
+            <span class:list={['w-1 flex-1 rounded-full', BAR[run.tone]]} />
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="mb-1.5 text-[11.5px] font-medium text-muted-foreground">{run.driver}</div>
+            <div class="flex flex-col gap-1.5">
+              {run.stops.map((s) => (
+                <div
+                  class:list={[
+                    'rounded-lg border px-3 py-2',
+                    s.state === 'next' ? 'border-teal-300 bg-brand-soft/60 ring-1 ring-teal-200' : 'border-border bg-card',
+                    s.state === 'done' && 'opacity-60',
+                  ]}
+                >
+                  <div class="flex items-center gap-2">
+                    <span
+                      class:list={[
+                        'text-[10.5px] font-semibold tracking-wide uppercase',
+                        s.state === 'done' ? 'text-muted-foreground' : s.kind === 'utovar' ? 'text-utovar' : 'text-istovar',
+                      ]}
+                    >
+                      {w.kind[s.kind]}
+                    </span>
+                    <span class="text-[11.5px] text-muted-foreground">{s.date}</span>
+                    {s.state === 'next' && (
+                      <Badge tone="brand" look="solid" class="h-4 px-1.5 text-[10px]">
+                        {w.next}
+                      </Badge>
+                    )}
+                    {s.state === 'done' && <Icon name="check" size={14} class="ml-auto text-success" />}
+                    {s.state !== 'done' && <Icon name="dots" size={14} class="ml-auto text-muted-foreground" />}
+                  </div>
+                  <div class="mt-0.5 font-medium">
+                    {s.place} <span class="font-normal text-muted-foreground">· {s.company}</span>
+                  </div>
+                  {!compact && <div class="text-[11px] text-muted-foreground">{s.cargo}</div>}
+                  {s.state === 'next' && (
+                    <span class="mt-2 inline-flex h-7 items-center gap-1 rounded-md bg-primary px-2.5 text-[11.5px] font-semibold text-primary-foreground">
+                      <Icon name="check" size={12} /> {w.ruta.confirmUnloading}
+                    </span>
+                  )}
+                  {s.note && !compact && s.state !== 'next' && (
+                    <div
+                      class:list={[
+                        'mt-1 flex items-center gap-1 text-[11px]',
+                        s.note.tone === 'warn' ? 'text-warning' : 'text-muted-foreground',
+                      ]}
+                    >
+                      <Icon name={s.note.tone === 'warn' ? 'bell' : 'check'} size={11} />
+                      {s.note.text}
+                      {s.note.tone === 'warn' && <span class="font-semibold underline">· {w.ruta.notifyNow}</span>}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>

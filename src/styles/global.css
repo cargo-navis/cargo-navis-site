@@ -1,88 +1,198 @@
+/*
+ * Cargo Navis site styles — the app's KAN-55 look (cargo-navis-web src/styles/globals.css + palette.css): pure neutral
+ * greys, petrol #0B5560 primary, utovar orange / istovar teal, driver colours, agency violet. Sora 700 headings, Geist
+ * body, Geist Mono for registrations — self-hosted through @fontsource (no requests to Google).
+ */
 @import "tailwindcss";
 
-/* DM Sans — self-hosted (rescued from Webflow CDN, TTF -> WOFF2) */
-@font-face {
-  font-family: "DM Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/dmsans-regular.woff2") format("woff2");
-}
-@font-face {
-  font-family: "DM Sans";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("/fonts/dmsans-medium.woff2") format("woff2");
-}
-@font-face {
-  font-family: "DM Sans";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("/fonts/dmsans-semibold.woff2") format("woff2");
-}
-@font-face {
-  font-family: "DM Sans";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("/fonts/dmsans-bold.woff2") format("woff2");
-}
-@font-face {
-  font-family: "DM Sans";
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url("/fonts/dmsans-black.woff2") format("woff2");
+/* Fonts: only the weights in use, latin + latin-ext (čćšžđ) subsets; the browser loads a file only when the page uses
+   characters from its unicode-range. */
+@import "@fontsource/geist/latin-400.css";
+@import "@fontsource/geist/latin-ext-400.css";
+@import "@fontsource/geist/latin-500.css";
+@import "@fontsource/geist/latin-ext-500.css";
+@import "@fontsource/geist/latin-600.css";
+@import "@fontsource/geist/latin-ext-600.css";
+@import "@fontsource/geist/latin-700.css";
+@import "@fontsource/geist/latin-ext-700.css";
+@import "@fontsource/geist-mono/latin-400.css";
+@import "@fontsource/geist-mono/latin-ext-400.css";
+@import "@fontsource/geist-mono/latin-500.css";
+@import "@fontsource/geist-mono/latin-ext-500.css";
+@import "@fontsource/sora/latin-600.css";
+@import "@fontsource/sora/latin-ext-600.css";
+@import "@fontsource/sora/latin-700.css";
+@import "@fontsource/sora/latin-ext-700.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --border: oklch(0.922 0 0);
+  --primary: #0b5560;
+  --primary-foreground: oklch(0.984 0.014 180.72);
+  --frame: color-mix(in oklch, #0b5560 6%, white);
+  --frame-border: color-mix(in oklch, #0b5560 14%, white);
+  --brand: #0b5560;
+  --brand-soft: #e0f7f8;
+  --utovar: #aa6011;
+  --utovar-dot: #cc7513;
+  --istovar: #117f8a;
+  --istovar-dot: #117f8a;
+  --success: #0e750e;
+  --warning: oklch(0.555 0.163 48.998);
+  --danger: oklch(0.577 0.245 27.325);
+  --series-regular: #13949f;
+  --series-agency: #7c3aed;
 }
 
-/* Design tokens (mapped from Webflow variables) */
+.dark {
+  --background: #141414;
+  --foreground: oklch(0.985 0 0);
+  --card: #1c1c1c;
+  --muted: #262626;
+  --muted-foreground: oklch(0.708 0 0);
+  --border: oklch(1 0 0 / 12%);
+  --frame: #08414b;
+  --frame-border: oklch(1 0 0 / 10%);
+  --brand: #4dd8df;
+  --brand-soft: rgb(8 65 75 / 40%);
+  --utovar: #ff9526;
+  --utovar-dot: #ff9526;
+  --istovar: #26cfd8;
+  --istovar-dot: #26cfd8;
+  --success: #26d826;
+  --warning: oklch(0.828 0.189 84.429);
+  --danger: oklch(0.704 0.191 22.216);
+  --series-regular: #14a3ad;
+  --series-agency: #9085e9;
+}
+
+@theme inline {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Sora", "Geist", ui-sans-serif, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-frame: var(--frame);
+  --color-frame-border: var(--frame-border);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-utovar: var(--utovar);
+  --color-utovar-dot: var(--utovar-dot);
+  --color-istovar: var(--istovar);
+  --color-istovar-dot: var(--istovar-dot);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-series-regular: var(--series-regular);
+  --color-series-agency: var(--series-agency);
+}
+
 @theme {
-  --font-sans: "DM Sans", Arial, sans-serif;
+  --color-petrol: #0b5560;
 
-  --color-brand: #0e6a75;
-  --color-brand-secondary: #1e1e1e;
-  --color-brand-tertiary: #eb1362;
-  --color-brand-alt: #1e4aa2;
-  --color-success: #45dc84;
-  --color-error: #eb1362;
-  --color-surface: #f7f7f7;
+  /* Cargo Navis palettes (app palette.css), overriding Tailwind's teal / orange / green. */
+  --color-teal-50: #e0f7f8;
+  --color-teal-100: #b3eef0;
+  --color-teal-200: #80e3e8;
+  --color-teal-300: #4dd8df;
+  --color-teal-400: #26cfd8;
+  --color-teal-500: #13949f;
+  --color-teal-600: #117f8a;
+  --color-teal-700: #0e6a75;
+  --color-teal-800: #0b5560;
+  --color-teal-900: #08414b;
+  --color-teal-950: #052c33;
+  --color-orange-50: #fff4e0;
+  --color-orange-100: #ffddab;
+  --color-orange-200: #ffc380;
+  --color-orange-300: #ffaa4d;
+  --color-orange-400: #ff9526;
+  --color-orange-500: #cc7513;
+  --color-orange-600: #aa6011;
+  --color-orange-700: #884d0e;
+  --color-green-50: #e0f8e0;
+  --color-green-100: #b3efb3;
+  --color-green-300: #4ddf4d;
+  --color-green-500: #13a213;
+  --color-green-700: #0e750e;
 
-  --container-site: 940px;
+  /* One colour per driver (sky, indigo, pink, lime, stone) — bar, avatar background, avatar text. */
+  --color-driver-1: oklch(0.746 0.16 232.661);
+  --color-driver-1-soft: oklch(0.951 0.026 236.824);
+  --color-driver-1-ink: oklch(0.443 0.11 240.79);
+  --color-driver-2: oklch(0.673 0.182 276.935);
+  --color-driver-2-soft: oklch(0.93 0.034 272.788);
+  --color-driver-2-ink: oklch(0.398 0.195 277.366);
+  --color-driver-3: oklch(0.718 0.202 349.761);
+  --color-driver-3-soft: oklch(0.948 0.028 342.258);
+  --color-driver-3-ink: oklch(0.459 0.187 3.815);
+  --color-driver-4: oklch(0.768 0.233 130.85);
+  --color-driver-4-soft: oklch(0.967 0.067 122.328);
+  --color-driver-4-ink: oklch(0.453 0.124 130.933);
+
+  /* Agencijski = violet. */
+  --color-agency-50: oklch(96.9% 0.016 293.756);
+  --color-agency-300: oklch(81.1% 0.111 293.571);
+  --color-agency-500: oklch(60.6% 0.25 292.717);
+  --color-agency-700: oklch(49.1% 0.27 292.581);
+
+  /* Radius base 12px: buttons / fields rounded-lg, cards rounded-xl. */
+  --radius-sm: 0.45rem;
+  --radius-md: 0.6rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1.05rem;
+  --radius-2xl: 1.35rem;
+  --radius-3xl: 1.65rem;
 }
 
-body {
-  font-family: var(--font-sans);
-  color: var(--color-brand-secondary);
-  font-size: 18px;
-  line-height: 1.44;
-  -webkit-font-smoothing: antialiased;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    @apply bg-background font-sans text-foreground antialiased;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-heading font-bold tracking-tight;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
 }
 
-/* Scroll reveal — reimplements Webflow scroll interactions.
-   Elements marked [data-reveal] start hidden/offset and reveal when the
-   IntersectionObserver in Layout.astro adds .is-revealed.
-   --reveal-delay staggers siblings; motion-reduce users see no offset. */
+/* Scroll reveal (same idea as the live site): LabLayout adds .is-revealed. */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(24px);
   transition:
     opacity 0.6s ease,
     transform 0.6s ease;
   transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
 }
 [data-reveal].is-revealed {
   opacity: 1;
   transform: none;
-}
-/* Scale-fade variants (hero images, dashboard shot) */
-[data-reveal="scale-80"] {
-  transform: scale(0.8);
-}
-[data-reveal="scale-70"] {
-  transform: scale(0.7);
 }
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
@@ -92,96 +202,157 @@ body {
   }
 }
 
-/* Logo marquee — continuous horizontal scroll (two identical rows) */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 30s linear infinite;
-}
-@keyframes marquee {
-  from {
-    transform: translateX(0);
+/* A new stop = a dot with a soft halo that grows and fades (app /assign). */
+@keyframes stop-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.8;
   }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+.stop-pulse {
+  animation: stop-pulse 1.6s ease-out infinite;
+}
+
+/* Logo strip: two identical rows scrolling forever. */
+@keyframes marquee {
   to {
     transform: translateX(-50%);
   }
 }
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 36s linear infinite;
+}
+
+/* Dashed route legs that slowly flow (hero route patterns). */
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -140;
+  }
+}
+.dash-flow {
+  animation: dash-flow 6s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track {
+  .stop-pulse,
+  .marquee-track,
+  .dash-flow {
     animation: none;
   }
 }
 
-/* 404: one static page carries both languages; show only the one that matches
-   the URL. Croatian is the default so a no-JS visitor still gets a full page. */
+/* 404: one static page carries both languages; show only the one that matches the URL. Croatian is the default so a
+   no-JS visitor still gets a full page. */
 html[data-page-lang="en"] [data-404-lang="hr"],
 html:not([data-page-lang="en"]) [data-404-lang="en"] {
   display: none;
 }
 
-/* Long-form legal copy (privacy policy). Deliberately narrow + plain — these
-   pages are read, not scanned, and share the site's DM Sans / brand tokens. */
+
+/* Legal pages (privacy policy) in the new look: Sora headings, Geist body, petrol links, hairline tables. */
 .legal-prose {
   max-width: 46rem;
+  color: color-mix(in oklch, var(--foreground) 82%, transparent);
+  font-size: 16px;
+  line-height: 1.7;
 }
 .legal-prose h2 {
-  margin-top: 2.5rem;
-  margin-bottom: 0.75rem;
+  margin-top: 3rem;
+  margin-bottom: 0.875rem;
+  scroll-margin-top: 1.5rem;
+  font-family: var(--font-heading);
   font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.25;
+  color: var(--foreground);
+}
+.legal-prose h2:first-child {
+  margin-top: 0;
 }
 .legal-prose h3 {
   margin-top: 1.75rem;
   margin-bottom: 0.5rem;
-  font-size: 1.125rem;
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
   font-weight: 600;
-  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--foreground);
 }
 .legal-prose p,
-.legal-prose ul,
-.legal-prose ol {
+.legal-prose ul {
   margin-bottom: 1rem;
-  font-size: 1rem;
-  line-height: 1.7;
 }
 .legal-prose ul {
-  list-style: disc;
-  padding-left: 1.25rem;
-}
-.legal-prose ol {
-  list-style: decimal;
-  padding-left: 1.25rem;
+  list-style: none;
+  padding-left: 0;
 }
 .legal-prose li {
-  margin-bottom: 0.4rem;
+  position: relative;
+  margin-bottom: 0.5rem;
+  padding-left: 1.25rem;
+}
+.legal-prose li::before {
+  content: "";
+  position: absolute;
+  top: 0.7em;
+  left: 0.25rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-teal-500);
+}
+.legal-prose strong {
+  font-weight: 600;
+  color: var(--foreground);
 }
 .legal-prose a {
-  color: var(--color-brand);
+  font-weight: 500;
+  color: var(--brand);
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-decoration-color: color-mix(in oklch, var(--brand) 35%, transparent);
+  text-underline-offset: 3px;
+}
+.legal-prose a:hover {
+  text-decoration-color: var(--brand);
 }
 .legal-prose table {
   width: 100%;
-  margin-bottom: 1.5rem;
-  border-collapse: collapse;
+  margin: 1.25rem 0 1.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
   font-size: 0.9375rem;
+  line-height: 1.55;
 }
 .legal-prose th,
 .legal-prose td {
-  border: 1px solid #e2e5e7;
-  padding: 0.625rem 0.75rem;
+  padding: 0.75rem 1rem;
   text-align: left;
   vertical-align: top;
-  line-height: 1.55;
+  border-bottom: 1px solid var(--border);
+}
+.legal-prose tr:last-child td {
+  border-bottom: 0;
 }
 .legal-prose th {
-  background: var(--color-surface);
+  background: var(--frame);
   font-weight: 600;
+  color: var(--foreground);
 }
-.legal-prose code {
-  border-radius: 4px;
-  background: var(--color-surface);
-  padding: 0.1rem 0.35rem;
-  font-size: 0.875em;
+.legal-prose td:first-child {
+  font-weight: 500;
+  color: var(--foreground);
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .legal-prose td:first-child {
+    white-space: normal;
+  }
 }

@@ -1,0 +1,115 @@
+---
+// The app shell (DECISIONS §4): petrol 6 % frame, sidebar with the company on top, content as an inset rounded card
+// with breadcrumb · ⌘K · bell. Container queries: the sidebar shows when the window is wide enough.
+import Icon, { type IconName } from '../ui/Icon.astro';
+import { Image } from 'astro:assets';
+import logomark from '../../assets/logos/logomark.webp';
+import { appWords } from './words';
+
+interface Props {
+  active?: string;
+  crumbs?: string[];
+  class?: string;
+  /** Keep the sidebar hidden even when wide (for tight crops). */
+  bare?: boolean;
+}
+const w = appWords(Astro.url);
+const { active = 'nalozi', crumbs = [w.nav.nalozi], class: klass, bare = false } = Astro.props;
+
+const NAV: [string, string, IconName][] = [
+  ['pocetna', w.nav.pocetna, 'home'],
+  ['nalozi', w.nav.nalozi, 'file'],
+  ['prijevozi', w.nav.prijevozi, 'truck-delivery'],
+  ['flota', w.nav.flota, 'truck'],
+  ['klijenti', w.nav.klijenti, 'briefcase'],
+  ['podvozari', w.nav.podvozari, 'truck-loading'],
+  ['zaposlenici', w.nav.zaposlenici, 'users'],
+  ['analitika', w.nav.analitika, 'chart'],
+];
+---
+
+<div
+  class:list={[
+    '@container overflow-hidden rounded-2xl border border-frame-border bg-frame text-left text-foreground shadow-[0_30px_80px_-30px_rgb(11_85_96/0.35)]',
+    klass,
+  ]}
+>
+  <div class="flex">
+    {
+      !bare && (
+        <aside class="hidden w-[184px] shrink-0 flex-col gap-0.5 p-2.5 text-[12.5px] @3xl:flex">
+          <div class="mb-2 flex items-center gap-2 px-1.5 py-1">
+            <span class="flex size-7 items-center justify-center rounded-md bg-white">
+              <Image src={logomark} alt="" class="size-5 object-contain" />
+            </span>
+            <span class="truncate font-heading text-[12.5px] font-bold tracking-tight">Transporti Horvat</span>
+          </div>
+          {NAV.map(([key, label, icon]) => (
+            <>
+              <div
+                class:list={[
+                  'flex h-8 items-center gap-2 rounded-md px-2',
+                  key === active ? 'bg-white font-medium text-petrol shadow-sm' : 'text-foreground/75',
+                ]}
+              >
+                <Icon name={icon} size={15} />
+                {label}
+              </div>
+              {key === 'nalozi' && (
+                <div class="flex flex-col gap-0.5 pl-6 text-foreground/60">
+                  <div class="flex h-7 items-center gap-1.5 px-2">
+                    <Icon name="plus" size={13} />
+                    {w.newOrder}
+                  </div>
+                  <div class="flex h-7 items-center gap-1.5 px-2">
+                    <Icon name="upload" size={13} />
+                    {w.uploadOrder}
+                  </div>
+                </div>
+              )}
+            </>
+          ))}
+          <div class="mt-auto flex items-center gap-2 px-1.5 pt-6 text-foreground/70">
+            <span class="flex size-7 items-center justify-center rounded-full bg-white text-[11px] font-semibold text-petrol">
+              MH
+            </span>
+            <span class="truncate">marija@horvat.hr</span>
+          </div>
+        </aside>
+      )
+    }
+    <div
+      class:list={[
+        'm-2 min-w-0 flex-1 overflow-hidden rounded-xl border border-frame-border bg-card shadow-sm',
+        !bare && '@3xl:ml-0',
+      ]}
+    >
+      <div class="flex h-11 items-center gap-3 border-b border-border px-4 text-[12px]">
+        <div class="flex min-w-0 items-center gap-1.5 text-muted-foreground">
+          {
+            crumbs.map((c, i) => (
+              <>
+                {i > 0 && <span class="text-foreground/30">/</span>}
+                <span class:list={['truncate', i === crumbs.length - 1 && 'font-medium text-foreground']}>{c}</span>
+              </>
+            ))
+          }
+        </div>
+        <div
+          class="ml-auto hidden h-7 w-44 items-center gap-1.5 rounded-md border border-border px-2 text-muted-foreground @xl:flex"
+        >
+          <Icon name="search" size={13} />
+          <span class="flex-1">{w.search}</span>
+          <kbd class="rounded border border-border px-1 font-sans text-[10px]">⌘K</kbd>
+        </div>
+        <span class="relative text-foreground/70 @max-xl:ml-auto">
+          <Icon name="bell" size={16} />
+          <span class="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-red-500 ring-2 ring-card"></span>
+        </span>
+      </div>
+      <div class="p-4">
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>

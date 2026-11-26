@@ -1,0 +1,69 @@
+---
+// Web analytics: PostHog EU Cloud, its own project (not the app's). Off without PUBLIC_POSTHOG_KEY (local,
+// previews), so nothing on the site may depend on it.
+//
+// Collects, and nothing else:
+// - `$pageview` / `$pageleave` — the Web analytics dashboard (visitors, sessions, bounce rate, sources, pages) and
+//   scroll depth.
+// - `$autocapture` — clicks on links and buttons only (which CTAs work, from which section), no other elements or
+//   events, no copied text.
+// - Heatmaps — click positions and scroll depth per page. Clickmaps are built from the autocapture clicks.
+// - `$web_vitals` — LCP, INP, CLS and FCP measured in visitors' browsers.
+// No replay, errors, surveys, flags, experiments, tours or chat.
+//
+// Cookieless: `cookieless_mode: 'always'` stores nothing in the browser (no cookie, no localStorage); PostHog counts
+// visitors from a daily-rotating server-side hash instead, so no consent banner is needed. Needs "Cookieless server
+// hash mode" enabled in the project settings, or PostHog drops these events. Heatmaps on the free plan only collect
+// the pages listed under Heatmap capture URLs in the project settings. Privacy policy 4.1, 4.4–4.6 say so; keep them
+// in sync.
+---
+
+<script>
+  const KEY = import.meta.env.PUBLIC_POSTHOG_KEY;
+
+  if (KEY) {
+    // Slim build plus only the analytics extensions (autocapture, heatmaps, web vitals) and the web-vitals library,
+    // all bundled from npm: nothing is fetched from PostHog's CDN at run time. Loaded on demand so the SDK never
+    // delays the page. Each page is a full load (no client-side routing), so its initial pageview is the only one.
+    Promise.all([
+      import('posthog-js/dist/module.slim'),
+      import('posthog-js/dist/extension-bundles'),
+      // Registers the web-vitals callbacks the extension looks for, instead of it loading them from the CDN.
+      import('posthog-js/dist/web-vitals'),
+    ]).then(([{ default: posthog }, { AnalyticsExtensions }]) => {
+      posthog.init(KEY, {
+        // Proxied through our domain (vercel.json rewrites), so ad blockers don't drop it.
+        api_host: '/cn-relay',
+        ui_host: 'https://eu.posthog.com',
+        defaults: '2025-11-30',
+        cookieless_mode: 'always',
+        person_profiles: 'identified_only',
+        __extensionClasses: {
+          autocapture: AnalyticsExtensions.autocapture,
+          heatmaps: AnalyticsExtensions.heatmaps,
+          webVitalsAutocapture: AnalyticsExtensions.webVitalsAutocapture,
+        },
+        // Clicks on links and buttons only.
+        autocapture: {
+          dom_event_allowlist: ['click'],
+          element_allowlist: ['a', 'button'],
+          capture_copied_text: false,
+        },
+        capture_heatmaps: true,
+        // Core Web Vitals only: no network timing, no attribution detail (keeps the bundled web-vitals flavour).
+        capture_performance: { web_vitals: true, network_timing: false, web_vitals_attribution: false },
+        // No remote config: nothing switched on from the PostHog UI can start collecting more than this.
+        advanced_disable_flags: true,
+        disable_external_dependency_loading: true,
+        rageclick: false,
+        capture_dead_clicks: false,
+        capture_exceptions: false,
+        disable_session_recording: true,
+        disable_surveys: true,
+        disable_product_tours: true,
+        disable_conversations: true,
+        disable_web_experiments: true,
+      });
+    });
+  }
+</script>

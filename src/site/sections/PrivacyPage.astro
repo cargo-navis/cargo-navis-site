@@ -1,0 +1,103 @@
+---
+// Politika privatnosti page body (pages/privacy-policy.astro, pages/en/privacy-policy.astro). The legal text lives in
+// components/legal/PrivacyBody*; this is the frame: site nav and footer, a frame-coloured header, a sticky „Sadržaj”
+// (ui.legal.sections in copy.ts / copy.en.ts, one entry per h2 id in the body, rendered server-side so the anchors
+// work without JS), Sora headings and hairline tables (.legal-prose in styles/global.css).
+import SiteNav from './SiteNav.astro';
+import SiteFooter from './SiteFooter.astro';
+import Icon from '../ui/Icon.astro';
+import PrivacyBodyHr from '../../components/legal/PrivacyBodyHr.astro';
+import PrivacyBodyEn from '../../components/legal/PrivacyBodyEn.astro';
+import { LEGAL } from '../../consts';
+import { getCopy, isEn } from '../locale';
+
+const { ui, DEMO_HREF } = getCopy(Astro.url);
+const en = isEn(Astro.url);
+const updated = new Date(LEGAL.privacyUpdated).toLocaleDateString(ui.legal.dateLocale, {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+  <div class="border-b border-frame-border bg-frame">
+    <SiteNav />
+    <header class="mx-auto max-w-[1200px] px-6 pt-12 pb-14">
+      <p class="mb-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-petrol">
+        <Icon name="license" size={16} />
+        {ui.legal.eyebrow}
+      </p>
+      <h1 class="text-[clamp(2.25rem,1.6rem+2.8vw,3.75rem)] leading-[1.05]">{ui.legal.privacyTitle}</h1>
+      <p class="mt-5 inline-flex items-center gap-1.5 rounded-full border border-frame-border bg-white px-3 py-1 text-[13.5px] text-muted-foreground">
+        <Icon name="calendar" size={14} />
+        {ui.legal.updated}: {updated}
+      </p>
+    </header>
+  </div>
+
+  <main class="mx-auto grid max-w-[1200px] gap-14 px-6 py-16 lg:grid-cols-[240px_1fr]">
+    <nav class="max-lg:hidden" aria-label={ui.legal.toc}>
+      <div class="sticky top-8">
+        <p class="mb-3 text-[13px] font-semibold text-muted-foreground">{ui.legal.toc}</p>
+        <ol class="flex flex-col border-l border-border text-[14px]" data-toc>
+          {
+            ui.legal.sections.map((s) => (
+              <li>
+                <a
+                  href={`#${s.id}`}
+                  data-toc-link={s.id}
+                  class="-ml-px block border-l-2 border-transparent py-1.5 pl-4 text-muted-foreground transition-colors hover:text-foreground data-[active]:border-petrol data-[active]:font-medium data-[active]:text-foreground"
+                >
+                  {s.label}
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </nav>
+
+    <div>
+      <article class="legal-prose" data-prose>
+        {en ? <PrivacyBodyEn demoHref={DEMO_HREF} /> : <PrivacyBodyHr demoHref={DEMO_HREF} />}
+      </article>
+
+      <div class="mt-14 flex max-w-[46rem] items-start gap-3 rounded-2xl border border-frame-border bg-frame p-6">
+        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-petrol">
+          <Icon name="mail" size={18} />
+        </span>
+        <div class="text-[15px]">
+          <div class="font-semibold">{ui.legal.contactTitle}</div>
+          <div class="text-muted-foreground">
+            {ui.legal.contactText}{' '}
+            <a href={`mailto:${LEGAL.privacyEmail}`} class="font-medium text-petrol underline-offset-4 hover:underline">
+              {LEGAL.privacyEmail}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter />
+
+  <script>
+    // „Sadržaj”: mark the section in view (petrol bar), like the day steps. The list itself is server-rendered.
+    const prose = document.querySelector<HTMLElement>('[data-prose]');
+    const links = new Map(
+      [...document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')].map((a) => [a.dataset.tocLink, a]),
+    );
+    if (prose && links.size) {
+      const headings = [...prose.querySelectorAll<HTMLHeadingElement>('h2[id]')];
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            links.forEach((a, id) => a.toggleAttribute('data-active', id === e.target.id));
+          }
+        },
+        { rootMargin: '0px 0px -70% 0px' },
+      );
+      headings.forEach((h) => io.observe(h));
+    }
+  </script>
