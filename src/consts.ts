@@ -3,10 +3,22 @@ import type { Locale } from './i18n/ui';
 export const SITE = {
   name: 'Cargo Navis',
   url: 'https://www.cargo-navis.com',
-  ogImage: '/og-image.jpg', // 1200x630
   loginUrl: 'https://app.cargo-navis.com/login',
   contactEmail: 'info@cargo-navis.com',
+  // Company profiles, for the Organization structured data (`sameAs`).
+  profiles: ['https://www.linkedin.com/company/cargo-navis', 'https://www.facebook.com/profile.php?id=61578706550160'],
 } as const;
+
+// Structured-data IDs, so the blocks on a page point at each other instead of repeating the company.
+export const ORG_ID = `${SITE.url}/#organization`;
+export const WEBSITE_ID = `${SITE.url}/#website`;
+
+// Default link-preview image per locale (public/, 1200×630 PNG): the hero headline next to the driver app with a
+// confirmed utovar. Static files, made once from the site's fonts and colours; replace both if the hero copy changes.
+export const OG_IMAGE: Record<Locale, { src: string; alt: string }> = {
+  hr: { src: '/og-image-hr.png', alt: 'Cargo Navis: nalozi, vozila i vozači na jednom mjestu' },
+  en: { src: '/og-image-en.png', alt: 'Cargo Navis: shipments, vehicles and drivers in one place' },
+};
 
 // Legal entity behind the site — used by the privacy policy and Organization JSON-LD.
 export const LEGAL = {
