@@ -17,7 +17,7 @@ const loop = [...logos, ...logos, ...logos, ...logos];
   <div class="mx-auto max-w-[1200px] px-6">
     {label && <p class="mb-6 text-center text-[13.5px] font-medium text-muted-foreground">{label}</p>}
     <div class="overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
-      <div class:list={['marquee-track items-center', size === 'lg' ? 'gap-20' : 'gap-16']}>
+      <div class:list={['marquee-track items-center', size === 'lg' ? 'gap-20 max-sm:gap-8' : 'gap-16 max-sm:gap-8']}>
         {
           /* Only the first set carries alt text; the three repeats exist for the scroll loop. */
           loop.map((l, i) => (
@@ -28,7 +28,8 @@ const loop = [...logos, ...logos, ...logos, ...logos];
               class:list={[
                 // Grey by default; the hovered logo gets its own colours back.
                 'flex-none object-contain opacity-60 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0',
-                size === 'lg' ? 'h-14 w-44 max-sm:h-11 max-sm:w-36' : 'h-10 w-32',
+                // Phones: logos as big as on desktop, closer together (gap above).
+                size === 'lg' ? 'h-14 w-44 max-sm:h-16 max-sm:w-44' : 'h-10 w-32 max-sm:h-12 max-sm:w-36',
               ]}
             />
           ))
