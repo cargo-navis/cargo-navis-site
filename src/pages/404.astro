@@ -41,7 +41,6 @@ const copy = [
     <SiteNav tone="dark" />
     <main class="relative mx-auto max-w-[760px] px-6 pt-20 pb-32 text-center max-md:pt-12 max-md:pb-24">
       <div
-        data-reveal
         class="font-heading text-[clamp(5rem,3rem+10vw,9rem)] leading-none font-bold tracking-tight text-teal-300"
         aria-hidden="true"
       >
@@ -49,7 +48,7 @@ const copy = [
       </div>
       {
         copy.map((c) => (
-          <div data-reveal data-404-lang={c.lang} lang={c.lang} class="mt-8" style="--reveal-delay:80ms">
+          <div data-404-lang={c.lang} lang={c.lang} class="mt-8">
             <h1 class="text-[clamp(1.75rem,1.3rem+1.6vw,2.5rem)] leading-[1.15]">{c.heading}</h1>
             <p class="mx-auto mt-4 max-w-[520px] text-[17px] text-white/80">{c.text}</p>
             <div class="mt-8 flex flex-wrap justify-center gap-3">

@@ -20,21 +20,20 @@ const { hero, DEMO_HREF, LOGIN_HREF } = getCopy(Astro.url);
   <div class="relative mx-auto max-w-[1200px] px-6 pt-20 max-md:pt-12">
     <div class="max-w-3xl">
       <span
-        data-reveal
         class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[13px] font-medium text-white/85"
       >
         <span class="size-1.5 rounded-full bg-orange-400"></span>
         {hero.eyebrow}
       </span>
-      <h1 data-reveal class="mt-6 text-[clamp(2.5rem,1.6rem+3.6vw,4.5rem)] leading-[1.05]" style="--reveal-delay:60ms">
+      <h1 class="mt-6 text-[clamp(2.5rem,1.6rem+3.6vw,4.5rem)] leading-[1.05]">
         {hero.title}
       </h1>
-      <p data-reveal class="mt-6 max-w-2xl text-[18px] text-white/80" style="--reveal-delay:120ms">{hero.sub}</p>
-      <div data-reveal class="mt-8 flex flex-wrap gap-3" style="--reveal-delay:180ms">
+      <p class="mt-6 max-w-2xl text-[18px] text-white/80">{hero.sub}</p>
+      <div class="mt-8 flex flex-wrap gap-3">
         <Button href={DEMO_HREF} variant="inverse" iconEnd="arrow-right">{hero.primary}</Button>
         <Button href={LOGIN_HREF} variant="inverse-outline" target="_blank">{hero.secondary}</Button>
       </div>
-      <ul data-reveal class="mt-12 grid gap-4 text-[14.5px] text-white/85 sm:grid-cols-3" style="--reveal-delay:240ms">
+      <ul class="mt-12 grid gap-4 text-[14.5px] text-white/85 sm:grid-cols-3">
         {
           hero.points.map((p) => (
             <li class="flex items-start gap-2.5">
