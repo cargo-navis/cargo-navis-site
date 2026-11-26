@@ -67,9 +67,12 @@ const { demoHref = localizePath(DEMO_PATH, locale) } = Astro.props;
   of the request, and the requested URL.
 </p>
 <p>
-  We also measure how the site is used: pages viewed and how long you stay, the site or campaign that
-  brought you here, device and browser type, and approximate location (country and city) derived
-  from your IP address. We do not link this to you personally and do not record sessions. Visits are
+  We also measure how the site is used: pages viewed and how long you stay, how far you scroll, clicks
+  on links and buttons (which button, and where on the page), how fast pages load in your browser,
+  the site or campaign that brought you here, device and browser type, and approximate location
+  (country and city) derived from your IP address. From clicks and scrolling we build heatmaps of
+  individual pages. We do not record what you type, we do not link this data to you personally, and
+  we do not record sessions. Visits are
   counted without cookies or any other data stored in your browser: PostHog computes a hash from
   your IP address and browser data on its servers, with a key that changes every day, so visits
   cannot be linked from one day to the next. We use PostHog for this, with its data hosted in the

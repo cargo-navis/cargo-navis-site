@@ -27,7 +27,7 @@ export const LEGAL = {
   addressLines: ['Županjska ulica 21', '10000 Zagreb', 'Hrvatska / Croatia'],
   privacyEmail: SITE.contactEmail,
   // Keep in sync with the "last updated" line rendered on the policy pages.
-  privacyUpdated: '2026-11-25',
+  privacyUpdated: '2026-11-26',
 } as const;
 
 // Google Calendar appointment schedule powering /demo.

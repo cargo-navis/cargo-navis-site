@@ -66,9 +66,12 @@ const { demoHref = localizePath(DEMO_PATH, locale) } = Astro.props;
   zahtjeva te zatraženu adresu.
 </p>
 <p>
-  Također mjerimo kako se stranica koristi: pregledane stranice i vrijeme zadržavanja, stranicu ili
-  kampanju s koje ste došli, vrstu uređaja i preglednika te približnu lokaciju (država i grad)
-  utvrđenu iz IP adrese. Te podatke ne povezujemo s vama osobno i ne snimamo sesije. Posjeti se
+  Također mjerimo kako se stranica koristi: pregledane stranice i vrijeme zadržavanja, koliko se
+  daleko pomičete po stranici, klikove na poveznice i gumbe (na koji gumb i gdje na stranici), brzinu
+  učitavanja stranice u vašem pregledniku, stranicu ili kampanju s koje ste došli, vrstu uređaja i
+  preglednika te približnu lokaciju (država i grad) utvrđenu iz IP adrese. Iz klikova i pomicanja
+  izrađujemo toplinske karte (heatmaps) pojedinih stranica. Ne bilježimo što upisujete, te podatke
+  ne povezujemo s vama osobno i ne snimamo sesije. Posjeti se
   broje bez kolačića i bez ikakvih podataka pohranjenih u vašem pregledniku: PostHog na svojim
   poslužiteljima izračunava sažetak (hash) iz IP adrese i podataka o pregledniku, s ključem koji se
   mijenja svaki dan, pa se posjeti ne mogu povezati iz dana u dan. Za to koristimo PostHog, s
